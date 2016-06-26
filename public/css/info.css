@@ -1,0 +1,105 @@
+table{
+    border-collapse:collapse;
+    width: 100%
+}
+table thead th{
+    padding: 10px;
+    border-radius: 5px 5px 0px 0px;
+}
+table tbody td{
+    padding: 10px;
+    border: 1px solid gainsboro;
+}
+.bx-wrapper img {
+    width: 100%;
+    display: inline;
+}
+.bx_thumb img{
+    max-width: 50px;
+    margin-left: 2px;
+    display: inline-block;
+}
+.bx_thumb{
+    text-align: center;
+}
+#thum_hinh_phong img{
+    vertical-align: middle;
+    display: block;
+}
+#thum_hinh_phong {
+    width: 110px;
+    margin: 38px auto 0px;
+    text-align: center;
+}
+#thum_hinh_phong a{
+    margin: 5px;
+}
+#hinh_phong img{
+    height: 530px;
+}
+#hinh_nha img{
+    height: 350px;
+}
+
+.panel-body{
+    padding: 0;
+}
+.title{
+    font-size: 20px;
+    color: #0C4C07;
+}
+.panel-success .panel-heading{
+    background-color: #439621;
+    color: white;
+}
+.panel-success{
+    box-shadow: 0px 5px 9px #888888;
+}
+.nav-tabs { border-bottom: 2px solid #DDD; }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; }
+.nav-tabs > li > a { border: none; color: #666; }
+.nav-tabs > li.active > a, .nav-tabs > li > a:hover { border: none; color: #4285F4 !important; background: transparent; }
+.nav-tabs > li > a::after { content: ""; background: #4285F4; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -1px; transition: all 250ms ease 0s; transform: scale(0); }
+.nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
+.tab-nav > li > a::after { background: #21527d none repeat scroll 0% 0%; color: #fff; }
+.bx_thumb li {
+    list-style: none;
+}
+.panel-body .bx-wrapper{
+    margin: 0 auto;
+}
+.thumbnail
+{
+    margin-bottom: 20px;
+    padding: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+.grid-group-item .thumbnail {
+    position:relative;
+    overflow:hidden;	
+}
+.grid-group-item .captionhide {
+    z-index: 999;
+    padding: 5px;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: black;
+    opacity: 0.9;
+    width: 100%;
+    height: 100%;
+    color:#fff !important;
+}
+.grid-group-item .captionhide p{
+    font-size: 12px;
+}
+.grid-group-item  p{
+    margin: 0 0 5px;
+    font-size: 13px;
+}
+#products .thumbnail{
+    margin-bottom: 0px;
+}

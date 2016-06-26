@@ -1,0 +1,32 @@
+.clearfix{
+    margin-bottom: 20px;
+}
+p{
+    margin: 0;
+}
+label.description{
+    font-size: small;
+    font-style: italic;
+    font-weight: normal;
+}
+label.title{
+    font-size: larger;
+}
+label.help-block{
+    padding: 0px 10px;
+    margin: 0px 0px 10px 5px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.inline-block{
+    display: inline-block;
+}
+input.inline-block{
+    width: 120px;
+}
+.btn-group.bootstrap-select.inline-block{
+    margin: 0;
+}
+.selectpicker + div > .dropdown-menu{
+    background: #fff;
+}

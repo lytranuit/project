@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auxiliary-configuration xmlns="http://www.netbeans.org/ns/auxiliary-configuration/1">
+    <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+        <word>Admin</word>
+        <word>elseif</word>
+        <word>Phát</word>
+    </spellchecker-wordlist>
+</auxiliary-configuration>
