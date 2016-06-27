@@ -1,9 +1,7 @@
-@extends("layouts.left")
-
-@section("title")
+<?php $__env->startSection("title"); ?>
 Website @parent
-@stop
-@section("content")
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection("content"); ?>
 <form method="POST" action="" id="form-dang-tin" style="margin: 20px 0px;">
     <h2 class='text-center text-success'>
         Đăng tin
@@ -28,9 +26,9 @@ Website @parent
                 Tỉnh/Thành phố
             </label><span class="text-danger">*</span><span class="error-place"></span>
             <select name="post_tp" ajax="" class="post_tp form-control" required="">
-                @foreach($thanhpho as $row)
-                <option value='{{$row['id_khuvuc']}}'>{{$row['ten_khuvuc']}}</option>
-                @endforeach
+                <?php foreach($thanhpho as $row): ?>
+                <option value='<?php echo e($row['id_khuvuc']); ?>'><?php echo e($row['ten_khuvuc']); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="form-group col-md-6 parent">
@@ -90,9 +88,9 @@ Website @parent
             </label><span class="error-place"></span>
             <select name="huong" class="form-control">
                 <option value="0">--- Chọn Hướng ---</option>
-                @foreach($huong as $row)
-                <option value='{{$row['id_huong']}}'>{{$row['ten_huong']}}</option>
-                @endforeach
+                <?php foreach($huong as $row): ?>
+                <option value='<?php echo e($row['id_huong']); ?>'><?php echo e($row['ten_huong']); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="form-group col-sm-12 col-md-6 parent">
@@ -101,9 +99,9 @@ Website @parent
             </label><span class="error-place"></span>
             <select name="phaply" class="form-control">
                 <option value="0">--- Chọn Pháp lý ---</option>
-                @foreach($phaply as $row)
-                <option value='{{$row['id_phaply']}}'>{{$row['ten_phaply']}}</option>
-                @endforeach
+                <?php foreach($phaply as $row): ?>
+                <option value='<?php echo e($row['id_phaply']); ?>'><?php echo e($row['ten_phaply']); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
     </div>
@@ -139,7 +137,7 @@ Website @parent
         $.ajax({
             type: 'GET',
             data: {parent: parent},
-            url: '{{base_url()}}member/get_quan_huyen',
+            url: '<?php echo e(base_url()); ?>member/get_quan_huyen',
             success: function (data) {
                 $(".post_quan").html(data);
             },
@@ -148,12 +146,12 @@ Website @parent
         });
     }
 </script>
-@stop
-@section("left-side")
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection("left-side"); ?>
 <div class="profile-sidebar">
     <!-- SIDEBAR USERPIC -->
     <div class="profile-userpic">
-        <img src="{{base_url()}}public/img/tran.jpg" class="img-responsive" alt="">
+        <img src="<?php echo e(base_url()); ?>public/img/tran.jpg" class="img-responsive" alt="">
     </div>
     <!-- END SIDEBAR USERPIC -->
     <!-- SIDEBAR USER TITLE -->
@@ -189,4 +187,6 @@ Website @parent
     </div>
     <!-- END MENU -->
 </div>
-@stop
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make("layouts.left", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

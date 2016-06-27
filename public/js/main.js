@@ -65,15 +65,14 @@ jQuery(function ($) {
     $("a[rel^='prettyPhoto']").prettyPhoto({
         social_tools: false
     });
-    
-    
-    
+
+
+
     /* dang tin */
-    
-    
+
     $(document).on('change', '.post_tp', function () {
         var parent = $(this).val();
-        //get_quan_huyen(parent);
+        get_quan_huyen(parent);
     });
     $("#media").click(function () {
     });
@@ -102,10 +101,9 @@ jQuery(function ($) {
 
         }
     });
-    
-    
+
     /* ENd dang tin */
-    
-    
-    
+
+
+
 });

@@ -1,0 +1,10 @@
+a:3:{s:4:"time";i:1466858579;s:3:"ttl";i:3600;s:4:"data";s:273:"
+
+<?php $this->_section_start("content"); ?>
+<a href="<?php echo base_url(); ?>auth/logout">Logout</a>
+<?php $this->_section_end(); ?>
+<?php $this->_section_start("title"); ?>
+Trang 
+<?php $this->_section_end(); ?>
+<?php echo $this->_include("layouts.template"); ?>
+";}

@@ -6,13 +6,15 @@
 
     <body class="homepage">
         @include("include.header")
-        <section class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    @yield("content")
-                </div>
-                <div class="col-md-4">
-                    @yield("right-side")
+        <section class='{{$func or ""}}'>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        @yield("content")
+                    </div>
+                    <div class="col-md-4">
+                        @yield("right-side")
+                    </div>
                 </div>
             </div>
         </section>
