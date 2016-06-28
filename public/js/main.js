@@ -68,41 +68,7 @@ jQuery(function ($) {
 
 
 
-    /* dang tin */
-
-    $(document).on('change', '.post_tp', function () {
-        var parent = $(this).val();
-        get_quan_huyen(parent);
-    });
-    $("#media").click(function () {
-    });
-    $.validator.setDefaults({
-        debug: true,
-        success: "valid"
-    });
-    $('.gia,.dien-tich,.chieudai,.chieurong').autoNumeric("init", {
-        aSep: ' ',
-        aDec: ',',
-        pSign: 's',
-        mDec: 0
-    });
-    $("#form-dang-tin").validate({
-        errorPlacement: function (error, element) {
-            element.parents(".parent").find(".error-place").addClass("text-danger");
-            error.appendTo(element.parents(".parent").find(".error-place"));
-        },
-        submitHandler: function (form) {
-            $('.gia,.dien-tich,.chieudai,.chieurong').each(function () {
-                var value = $(this).autoNumeric('get');
-                $(this).val(value);
-            });
-            form.submit();
-            return false;
-
-        }
-    });
-
-    /* ENd dang tin */
+    
 
 
 

@@ -2,7 +2,7 @@
 Website @parent
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection("content"); ?>
-<?php echo $__env->make("include.dangtin", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make("include.quanlytin", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection("left-side"); ?>
 <div class="profile-sidebar">
@@ -35,7 +35,7 @@ Website @parent
                     <i class="glyphicon glyphicon-user"></i>
                     Quản lý người dùng </a>
             </li>
-            <li>
+            <li class="active">
                 <a href="<?php echo e(base_url()); ?>member/quanlytin">
                     <i class="glyphicon glyphicon-flag"></i>
                     Quản lý tin </a>

@@ -51,11 +51,36 @@ class Member extends CI_Controller {
         }
     }
 
-    public function index() {
-        
+    public function index() { /////// trang ca nhan
     }
 
-    function dangtin() {
+    public function quanlyuser() {
+        $this->load->model("user_model");
+        $this->data['arr_users'] = $this->user_model->where(array('deleted' => 0))->as_object()->get_all();
+        foreach ($this->data['arr_users'] as $k => &$user) {
+            $group = $this->ion_auth->get_users_groups($user->id)->result();
+            $user->groups = $group;
+        }
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
+        echo $this->blade->view()->make('page/quanlyuser-page', $this->data)->render();
+    }
+
+    public function quanlytin() {
+        $id_user = $this->session->userdata('user_id');
+        $this->load->model("tin_model");
+        $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0))->as_object()->get_all();
+        foreach ($this->data['arr_tin'] as $k => &$tin) {
+            $tin->title = mb_substr($tin->title, 0, 50) . "...";
+        }
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
+        echo $this->blade->view()->make('page/quanlytin-page', $this->data)->render();
+    }
+
+    public function dangtin() { ////////// Trang dang tin
         if (isset($_POST['dangtin'])) {
             $post_title = $_POST['post_titles'];
             $post_content = $_POST['post_contents'];
@@ -108,7 +133,7 @@ class Member extends CI_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
 
-            echo $this->blade->view()->make('dangtin-page', $this->data)->render();
+            echo $this->blade->view()->make('page/dangtin-page', $this->data)->render();
         }
     }
 

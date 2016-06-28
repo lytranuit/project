@@ -40,7 +40,7 @@ class Index extends CI_Controller {
     }
 
     public function index() {
-        echo $this->blade->view()->make('index-page', $this->data)->render();
+        echo $this->blade->view()->make('page/index-page', $this->data)->render();
     }
 
     function login() {
@@ -72,7 +72,7 @@ class Index extends CI_Controller {
                 // the user is not logging in so display the login page
                 // set the flash data error message if there is one
                 $this->data['message'] = $this->session->flashdata('message');
-                echo $this->blade->view()->make('login-page', $this->data)->render();
+                echo $this->blade->view()->make('page/login-page', $this->data)->render();
             }
         } else {
             redirect('admin', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries

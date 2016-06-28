@@ -1,9 +1,3 @@
-@extends("layouts.left")
-
-@section("title")
-Website @parent
-@stop
-@section("content")
 <form method="POST" action="" id="form-dang-tin" style="margin: 20px 0px;">
     <h2 class='text-center text-success'>
         Đăng tin
@@ -28,9 +22,9 @@ Website @parent
                 Tỉnh/Thành phố
             </label><span class="text-danger">*</span><span class="error-place"></span>
             <select name="post_tp" ajax="" class="post_tp form-control" required="">
-                @foreach($thanhpho as $row)
-                <option value='{{$row['id_khuvuc']}}'>{{$row['ten_khuvuc']}}</option>
-                @endforeach
+                <?php foreach($thanhpho as $row): ?>
+                <option value='<?php echo e($row['id_khuvuc']); ?>'><?php echo e($row['ten_khuvuc']); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="form-group col-md-6 parent">
@@ -90,9 +84,9 @@ Website @parent
             </label><span class="error-place"></span>
             <select name="huong" class="form-control">
                 <option value="0">--- Chọn Hướng ---</option>
-                @foreach($huong as $row)
-                <option value='{{$row['id_huong']}}'>{{$row['ten_huong']}}</option>
-                @endforeach
+                <?php foreach($huong as $row): ?>
+                <option value='<?php echo e($row['id_huong']); ?>'><?php echo e($row['ten_huong']); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
         <div class="form-group col-sm-12 col-md-6 parent">
@@ -101,9 +95,9 @@ Website @parent
             </label><span class="error-place"></span>
             <select name="phaply" class="form-control">
                 <option value="0">--- Chọn Pháp lý ---</option>
-                @foreach($phaply as $row)
-                <option value='{{$row['id_phaply']}}'>{{$row['ten_phaply']}}</option>
-                @endforeach
+                <?php foreach($phaply as $row): ?>
+                <option value='<?php echo e($row['id_phaply']); ?>'><?php echo e($row['ten_phaply']); ?></option>
+                <?php endforeach; ?>
             </select>
         </div>
     </div>
@@ -132,14 +126,46 @@ Website @parent
     $(document).ready(function () {
         var parent = $(".post_tp").val();
         get_quan_huyen(parent);
+        /* dang tin */
 
+        $(document).on('change', '.post_tp', function () {
+            var parent = $(this).val();
+            get_quan_huyen(parent);
+        });
+        $.validator.setDefaults({
+            debug: true,
+            success: "valid"
+        });
+        $('.gia,.dien-tich,.chieudai,.chieurong').autoNumeric("init", {
+            aSep: ' ',
+            aDec: ',',
+            pSign: 's',
+            mDec: 0
+        });
+        $("#form-dang-tin").validate({
+            errorPlacement: function (error, element) {
+                element.parents(".parent").find(".error-place").addClass("text-danger");
+                error.appendTo(element.parents(".parent").find(".error-place"));
+            },
+            submitHandler: function (form) {
+                $('.gia,.dien-tich,.chieudai,.chieurong').each(function () {
+                    var value = $(this).autoNumeric('get');
+                    $(this).val(value);
+                });
+                form.submit();
+                return false;
+
+            }
+        });
+
+        /* ENd dang tin */
     });
     function get_quan_huyen(parent) {
         $(".post_quan").empty();
         $.ajax({
             type: 'GET',
             data: {parent: parent},
-            url: '{{base_url()}}member/get_quan_huyen',
+            url: '<?php echo e(base_url()); ?>member/get_quan_huyen',
             success: function (data) {
                 $(".post_quan").html(data);
             },
@@ -148,45 +174,3 @@ Website @parent
         });
     }
 </script>
-@stop
-@section("left-side")
-<div class="profile-sidebar">
-    <!-- SIDEBAR USERPIC -->
-    <div class="profile-userpic">
-        <img src="{{base_url()}}public/img/tran.jpg" class="img-responsive" alt="">
-    </div>
-    <!-- END SIDEBAR USERPIC -->
-    <!-- SIDEBAR USER TITLE -->
-    <div class="profile-usertitle">
-        <div class="profile-usertitle-name">
-            Marcus Doe
-        </div>
-        <div class="profile-usertitle-job">
-            Developer
-        </div>
-    </div>
-    <!-- END SIDEBAR USER TITLE -->
-    <!-- SIDEBAR BUTTONS -->
-    <div class="profile-userbuttons">
-        <button type="button" class="btn btn-success btn-sm">Follow</button>
-        <button type="button" class="btn btn-danger btn-sm">Message</button>
-    </div>
-    <!-- END SIDEBAR BUTTONS -->
-    <!-- SIDEBAR MENU -->
-    <div class="profile-usermenu">
-        <ul class="nav">
-            <li>
-                <a href="#">
-                    <i class="glyphicon glyphicon-user"></i>
-                    Users </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="glyphicon glyphicon-ok"></i>
-                    Tin đăng </a>
-            </li>
-        </ul>
-    </div>
-    <!-- END MENU -->
-</div>
-@stop

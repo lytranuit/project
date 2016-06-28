@@ -2,7 +2,7 @@
 Website @parent
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection("content"); ?>
-<?php echo $__env->make("include.dangtin", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make("include.quanlyuser", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection("left-side"); ?>
 <div class="profile-sidebar">
@@ -30,7 +30,7 @@ Website @parent
     <!-- SIDEBAR MENU -->
     <div class="profile-usermenu">
         <ul class="nav">
-            <li>
+            <li class='active'>
                 <a href="<?php echo e(base_url()); ?>member/quanlyuser">
                     <i class="glyphicon glyphicon-user"></i>
                     Quản lý người dùng </a>

@@ -1,14 +1,16 @@
-<?php $__env->startSection("title"); ?>
+@extends("layouts.left")
+
+@section("title")
 Website @parent
-<?php $__env->stopSection(); ?>
-<?php $__env->startSection("content"); ?>
-<?php echo $__env->make("include.dangtin", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php $__env->stopSection(); ?>
-<?php $__env->startSection("left-side"); ?>
+@stop
+@section("content")
+@include("include.quanlytin")
+@stop
+@section("left-side")
 <div class="profile-sidebar">
     <!-- SIDEBAR USERPIC -->
     <div class="profile-userpic">
-        <img src="<?php echo e(base_url()); ?>public/img/tran.jpg" class="img-responsive" alt="">
+        <img src="{{base_url()}}public/img/tran.jpg" class="img-responsive" alt="">
     </div>
     <!-- END SIDEBAR USERPIC -->
     <!-- SIDEBAR USER TITLE -->
@@ -31,17 +33,17 @@ Website @parent
     <div class="profile-usermenu">
         <ul class="nav">
             <li>
-                <a href="<?php echo e(base_url()); ?>member/quanlyuser">
+                <a href="{{base_url()}}member/quanlyuser">
                     <i class="glyphicon glyphicon-user"></i>
                     Quản lý người dùng </a>
             </li>
-            <li>
-                <a href="<?php echo e(base_url()); ?>member/quanlytin">
+            <li class="active">
+                <a href="{{base_url()}}member/quanlytin">
                     <i class="glyphicon glyphicon-flag"></i>
                     Quản lý tin </a>
             </li>
             <li>
-                <a href="<?php echo e(base_url()); ?>member">
+                <a href="{{base_url()}}member">
                     <i class="glyphicon glyphicon-lock"></i>
                     Thông tin cá nhân </a>
             </li>
@@ -49,6 +51,4 @@ Website @parent
     </div>
     <!-- END MENU -->
 </div>
-<?php $__env->stopSection(); ?>
-
-<?php echo $__env->make("layouts.left", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+@stop
