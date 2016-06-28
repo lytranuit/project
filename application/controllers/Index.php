@@ -40,6 +40,27 @@ class Index extends CI_Controller {
     }
 
     public function index() {
+        $id_user = $this->session->userdata('user_id');
+        $this->load->model("tin_model");
+        $this->load->model("user_model");
+        $this->load->model("khuvuc_model");
+        $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0, 'active' => 1))->as_array()->get_all();
+        foreach ($this->data['arr_tin'] as &$row) {
+            $arr_hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
+            if (count($arr_hinhanh)) {
+                $hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
+            } else {
+                $hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
+            }
+            $author = $this->user_model->where(array('id' => $row['id_user']))->as_array()->get_all();
+            $khuvuc = $this->khuvuc_model->where(array('id_khuvuc' => $row['id_khuvuc']))->as_array()->get_all();
+            $row['hinhanh'] = $hinhanh[0]['src'];
+            $row['author'] = $author[0]['username'];
+            $row['khuvuc'] = $khuvuc[0]['ten_khuvuc'];
+        }
+//        echo "<pre>";
+//        print_r($this->data['arr_tin']);
+//        die();
         echo $this->blade->view()->make('page/index-page', $this->data)->render();
     }
 
@@ -75,7 +96,7 @@ class Index extends CI_Controller {
                 echo $this->blade->view()->make('page/login-page', $this->data)->render();
             }
         } else {
-            redirect('admin', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
+            redirect('index', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
         }
     }
 

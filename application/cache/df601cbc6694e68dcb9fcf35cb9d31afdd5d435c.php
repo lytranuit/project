@@ -1,9 +1,7 @@
-@extends("layouts.template")
-
-@section("title")
+<?php $__env->startSection("title"); ?>
 Website @parent
-@stop
-@section("content")
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection("content"); ?>
 <section id="main-slider" class="no-margin">
     <div class="carousel slide">
         <ol class="carousel-indicators">
@@ -13,7 +11,7 @@ Website @parent
         </ol>
         <div class="carousel-inner">
 
-            <div class="item active" style="background-image: url({{base_url()}}public/img/slider/4.jpg)">
+            <div class="item active" style="background-image: url(<?php echo e(base_url()); ?>public/img/slider/4.jpg)">
                 <div class="container">
                     <div class="row slide-margin">
                         <div class="col-sm-6">
@@ -27,7 +25,7 @@ Website @parent
                 </div>
             </div><!--/.item-->
 
-            <div class="item" style="background-image: url({{base_url()}}public/img/slider/1.jpg)">
+            <div class="item" style="background-image: url(<?php echo e(base_url()); ?>public/img/slider/1.jpg)">
                 <div class="container">
                     <div class="row slide-margin">
                         <div class="col-sm-6">
@@ -41,7 +39,7 @@ Website @parent
                 </div>
             </div><!--/.item-->
 
-            <div class="item" style="background-image: url({{base_url()}}public/img/slider/1.jpg)">
+            <div class="item" style="background-image: url(<?php echo e(base_url()); ?>public/img/slider/1.jpg)">
                 <div class="container">
                     <div class="row slide-margin">
                         <div class="col-sm-6">
@@ -133,30 +131,32 @@ Website @parent
         </div>
 
         <div class="row equal">
-            @foreach($arr_tin as $row)
+            <?php foreach($arr_tin as $row): ?>
             <div class="col-md-6">
                 <div class="tin-show-grid wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="300ms">
                     <div class="media">
                         <div class="pull-left">
-                            <a href="#"><img class="media-object" src="{{base_url() . $row['hinhanh']}}" alt="" width="125px"></a>
+                            <a href="#"><img class="media-object" src="<?php echo e(base_url() . $row['hinhanh']); ?>" alt="" width="125px"></a>
                         </div>
                         <div class="media-body">
                             <div class="row">
-                                <span class="tin-title col-xs-12">{{$row['title']}}</span>
-                                <span class="tin-dientich col-xs-12" style="color: gray;">Diện tích : {{number_format($row['dientich'])}} m2</span>
-                                <span class="tin-quan col-xs-12">{{$row['khuvuc']}}</span>
+                                <span class="tin-title col-xs-12"><?php echo e($row['title']); ?></span>
+                                <span class="tin-dientich col-xs-12" style="color: gray;">Diện tích : <?php echo e(number_format($row['dientich'])); ?> m2</span>
+                                <span class="tin-quan col-xs-12"><?php echo e($row['khuvuc']); ?></span>
                             </div>
                         </div>
                     </div><!--/.media -->
                     <div class="row">
-                        <p class="col-xs-12 text-center tin-gia" style="">Giá : {{number_format($row['gia'])}} triệu VND</p>
+                        <p class="col-xs-12 text-center tin-gia" style="">Giá : <?php echo e(number_format($row['gia'])); ?> triệu VND</p>
                     </div>
                 </div>
             </div>
-            @endforeach
+            <?php endforeach; ?>
 
         </div><!--/.row-->
     </div><!--/.container-->
 </section><!--/#recent-works-->
 
-@stop
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make("layouts.template", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -45,13 +45,14 @@ class Member extends CI_Controller {
         }
         if (!$this->ion_auth->logged_in()) {
 //redirect them to the login page
-            $this->login();
+            redirect("index/login", "refresh");
         } else {
             $this->$method($params);
         }
     }
 
     public function index() { /////// trang ca nhan
+        print_r($this->session->userdata());
     }
 
     public function quanlyuser() {
@@ -120,7 +121,7 @@ class Member extends CI_Controller {
                     $this->hinhanh_model->update(array('deleted' => 0), $hinh);
                 }
             }
-            redirect('index', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
+            redirect('member/quanlytin', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
         } else {
             $this->load->model("khuvuc_model");
             $this->load->model("huong_model");
