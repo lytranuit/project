@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12" style="margin:20px 0px;">
-        <a class="btn btn-success" href="{{base_url()}}member/dangtin">Đăng tin</a>
+        <a class="btn btn-success" href="<?php echo e(base_url()); ?>member/dangtin">Đăng tin</a>
     </div>
 </div>
 <table id="quanlytin" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
@@ -15,24 +15,24 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($arr_tin as $key=>$tin)
+        <?php foreach($arr_tin as $key=>$tin): ?>
         <tr>
-            <td>{{$key+1}}</td>
-            <td>{{$tin->title}}</td>
-            <td>{{$tin->diachi}}</td>   
-            <td>{{number_format($tin->dientich)}} m2</td>
+            <td><?php echo e($key+1); ?></td>
+            <td><?php echo e($tin->title); ?></td>
+            <td><?php echo e($tin->diachi); ?></td>   
+            <td><?php echo e(number_format($tin->dientich)); ?> m2</td>
             <td>
-                @if($tin->active)
+                <?php if($tin->active): ?>
                 <button class="btn btn-xs btn-success">
                     <i class="ace-icon fa fa-check bigger-120">
                     </i>
                 </button>
-                @else
+                <?php else: ?>
                 <button class="btn btn-xs btn-danger">
                     <i class="ace-icon glyphicon-remove glyphicon bigger-120">
                     </i>
                 </button>
-                @endif
+                <?php endif; ?>
             </td>
             <td>
                 <button class="btn btn-xs btn-info">
@@ -45,7 +45,7 @@
                 </button>
             </td>
         </tr>
-        @endforeach
+        <?php endforeach; ?>
     </tbody>
 </table>
 

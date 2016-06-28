@@ -1,21 +1,20 @@
-@extends("layouts.box")
-
-@section("title")
+<?php $__env->startSection("title"); ?>
 Trang Đăng nhập
-@stop
-@section("content")
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection("content"); ?>
 <div id="loginbox" class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3"> 
     <div class="panel panel-default" >
         <div class="panel-heading">
             <div class="panel-title text-center">Đăng nhập</div>
         </div>     
         <div class="panel-body" >
-            <form name="form" id="form" action="{{base_url()}}index/login" class="form-horizontal"method="POST">
-                @if($message != '')
+            <form name="form" id="form" action="<?php echo e(base_url()); ?>index/login" class="form-horizontal"method="POST">
+                <?php if($message != ''): ?>
                 <div class="alert alert-danger">
-                    <a class="close" data-dismiss="alert" href="#">×</a>{{$message}}
+                    <a class="close" data-dismiss="alert" href="#">×</a><?php echo e($message); ?>
+
                 </div>
-                @endif
+                <?php endif; ?>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="user" type="text" class="form-control" name="identity" value="" placeholder="User">                                        
@@ -36,4 +35,6 @@ Trang Đăng nhập
         </div>                     
     </div>  
 </div>
-@stop
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make("layouts.box", array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

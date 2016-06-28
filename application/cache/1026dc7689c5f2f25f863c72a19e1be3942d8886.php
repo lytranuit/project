@@ -35,11 +35,13 @@
 <footer id="footer" class="midnight-blue">
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
-                Mạnh Tiến Phát - Developer Lý Trân
+            <div class="col-sm-9 col-xs-12">
+                <div class="text-center">
+                    Mạnh Tiến Phát - Developer Lý Trân
+                </div> 
             </div>
-            <div class="col-sm-6 col-xs-8">
-                <div class="social">
+            <div class="col-sm-3 col-xs-12">
+                <div class="text-center">
                     <ul class="social-share">
                         <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                         <li><a href="#"><i class="fa fa-twitter"></i></a></li>

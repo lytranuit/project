@@ -2704,3 +2704,58 @@ div.form-error ul li {
     background: #fff;
     min-height: 460px;
 }
+
+/* Tin Show */
+.tin-show-grid{
+    border: 1px solid #ddd;
+    padding: 15px;
+    position: relative;
+    line-height: 24px;
+    margin: 5px 0px;
+}
+.tin-show-grid .media-object{
+    width: 125px;
+    height: 100px;
+}
+.tin-show-grid .tin-title{
+    font-size: 14px;
+    font-weight: 600;
+    color: black;
+}
+.tin-show-grid .tin-dientich{
+    color: gray;
+}
+.tin-show-grid .tin-quan{
+    color: gray;
+}
+.tin-show-grid .tin-gia{
+    color: #F92B02;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 10px 0px 0px;
+    font-style: italic;
+}
+.equal {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.equal > div[class*='col-'] {  
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+
+@media screen and (min-width: 768px) {
+    .equal2, .equal2 > div[class*='col-'] {  
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        flex:1 0 auto;
+    }
+}
