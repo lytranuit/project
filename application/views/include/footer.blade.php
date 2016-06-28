@@ -36,6 +36,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-xs-12">
+<<<<<<< HEAD
                 Mạnh Tiến Phát - Developer Lý Trân
             </div>
             <div class="col-sm-3 col-xs-12">
@@ -45,6 +46,21 @@
                     <div class="col-xs-2"><a href="#"><i class="fa fa-linkedin"></i></a></div> 
                     <div class="col-xs-2"><a href="#"><i class="fa fa-dribbble"></i></a></div>
                     <div class="col-xs-2"><a href="#"><i class="fa fa-skype"></i></a></div>
+=======
+                <div class="text-center">
+                    Mạnh Tiến Phát - Developer Lý Trân
+                </div> 
+            </div>
+            <div class="col-sm-3 col-xs-12">
+                <div class="text-center">
+                    <ul class="social-share">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-linkedin"></i></a></li> 
+                        <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+                        <li><a href="#"><i class="fa fa-skype"></i></a></li>
+                    </ul>
+>>>>>>> f7a0ee64953e962d3a223da59786a77b6c94369d
                 </div>
             </div>
         </div>
