@@ -785,7 +785,7 @@ class MY_Model extends CI_Model {
                 $this->_write_to_cache($data);
                 return $data;
             } else {
-                return FALSE;
+                return array();
             }
         }
     }

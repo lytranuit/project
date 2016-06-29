@@ -108,7 +108,7 @@ CREATE TABLE `tbl_khuvuc` (
   `deleted` tinyint(9) unsigned NOT NULL DEFAULT '0',
   `order` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_khuvuc`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 /*Data for the table `tbl_khuvuc` */
 
@@ -180,13 +180,14 @@ CREATE TABLE `users` (
   `last_name` varchar(50) DEFAULT NULL,
   `company` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
+  `gioitinh` varchar(10) DEFAULT NULL,
   `deleted` tinyint(9) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`ip_address`,`username`,`password`,`salt`,`email`,`activation_code`,`forgotten_password_code`,`forgotten_password_time`,`remember_code`,`created_on`,`last_login`,`active`,`first_name`,`last_name`,`company`,`phone`,`deleted`) values (1,'127.0.0.1','administrator','$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36','','admin@admin.com','',NULL,NULL,NULL,1268889823,1467119644,1,'Admin','istrator','ADMIN','0',0);
+insert  into `users`(`id`,`ip_address`,`username`,`password`,`salt`,`email`,`activation_code`,`forgotten_password_code`,`forgotten_password_time`,`remember_code`,`created_on`,`last_login`,`active`,`first_name`,`last_name`,`company`,`phone`,`gioitinh`,`deleted`) values (1,'127.0.0.1','administrator','$2y$08$kta7mERQUwSznQ4P8rIHlemTkHGMtyjty0B8YojxhUlVjosT3CluC','','admin@admin.com',NULL,NULL,NULL,NULL,1268889823,1467212168,1,'Admin','tran','ADMIN','0195623455','Nam',0),(2,'::1','daotran','$2y$08$SsYkE1sZ.OP7zYsSxgq.N.mwDWzKiSQA.rWS/qObfZ7j3fQluMgc2',NULL,'lytranuit@gmail.com',NULL,NULL,NULL,NULL,1467211954,NULL,1,NULL,'tran',NULL,'0978019668',NULL,0);
 
 /*Table structure for table `users_groups` */
 
@@ -199,14 +200,12 @@ CREATE TABLE `users_groups` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uc_users_groups` (`user_id`,`group_id`),
   KEY `fk_users_groups_users1_idx` (`user_id`),
-  KEY `fk_users_groups_groups1_idx` (`group_id`),
-  CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  KEY `fk_users_groups_groups1_idx` (`group_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 /*Data for the table `users_groups` */
 
-insert  into `users_groups`(`id`,`user_id`,`group_id`) values (1,1,1),(2,1,2);
+insert  into `users_groups`(`id`,`user_id`,`group_id`) values (7,1,1),(8,1,2),(4,2,1),(5,2,2);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

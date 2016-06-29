@@ -52,20 +52,101 @@ class Member extends CI_Controller {
     }
 
     public function index() { /////// trang ca nhan
-        print_r($this->session->userdata());
+        $id_user = $this->session->userdata('user_id');
+        $this->load->model("user_model");
+        if (isset($_POST['edit_user'])) {
+            $additional_data = array(
+                'last_name' => $this->input->post('ten'),
+                'phone' => $this->input->post('dienthoai'),
+                'gioitinh' => $this->input->post("gioitinh")
+            );
+            $this->user_model->update($additional_data, $id_user);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        } else {
+            $user = $this->user_model->where(array('id' => $id_user))->as_array()->get_all();
+            $this->data['user'] = $user[0];
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            echo $this->blade->view()->make('page/thongtin-page', $this->data)->render();
+        }
     }
 
     public function quanlyuser() {
         $this->load->model("user_model");
+        $this->load->model("group_model");
+        $this->data['arr_groups'] = $this->group_model->where(array('deleted' => 0))->fields(array("id as value", "name as text"))->as_array()->get_all();
         $this->data['arr_users'] = $this->user_model->where(array('deleted' => 0))->as_object()->get_all();
         foreach ($this->data['arr_users'] as $k => &$user) {
             $group = $this->ion_auth->get_users_groups($user->id)->result();
-            $user->groups = $group;
+            $arr = array();
+            foreach ($group as $row) {
+                array_push($arr, $row->id);
+            }
+            $user->groups = implode(",", $arr);
         }
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
         echo $this->blade->view()->make('page/quanlyuser-page', $this->data)->render();
+    }
+
+    function change_group($params) {
+        $id_user = $params[0];
+        $arr_group = $this->input->post("value");
+        ////remove group cu
+        $this->ion_auth->remove_from_group('', $id_user);
+        foreach ($arr_group as $grp) {
+            $this->ion_auth->add_to_group($grp, $id_user);
+        }
+    }
+
+    function change_pass() {
+        $id_user = $this->session->userdata('user_id');
+        if (isset($_POST['change_pass'])) {
+            $this->ion_auth->change_password($this->session->userdata('identity'), $this->input->post('passwordold'), $this->input->post('password'));
+            $this->session->set_flashdata('success', "Thay đổi mật khẩu thành công!");
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        } else {
+            $this->data['id_user'] = $id_user;
+            $this->data['success'] = $this->session->flashdata('success');
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            echo $this->blade->view()->make('page/change-pass-page', $this->data)->render();
+        }
+    }
+
+    //remove a user
+    function remove_user($params) {
+        $id = $params[0];
+        $this->load->model("user_model");
+        $this->user_model->update(array("deleted" => 1), $id);
+    }
+
+    // activate the user
+    function activate($params) {
+        $id = $params[0];
+        $code = isset($params[1]) ? $params[1] : false;
+        if ($code !== false) {
+            $activation = $this->ion_auth->activate($id, $code);
+        } else if ($this->ion_auth->is_admin()) {
+            $activation = $this->ion_auth->activate($id);
+        }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
+    // deactivate the user
+    function deactivate($params) {
+        if (!$this->ion_auth->logged_in() || !$this->ion_auth->is_admin()) {
+            // redirect them to the home page because they must be an administrator to view this
+            return show_error('You must be an administrator to view this page.');
+        }
+        $id = (int) $params[0];
+        $this->ion_auth->deactivate($id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
     public function quanlytin() {
@@ -136,6 +217,33 @@ class Member extends CI_Controller {
 
             echo $this->blade->view()->make('page/dangtin-page', $this->data)->render();
         }
+    }
+
+    // activate the tin
+    function activate_tin($params) {
+        $this->load->model("tin_model");
+        $id = $params[0];
+        $this->tin_model->update(array("active" => 1), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
+    // deactivate the tin
+    function deactivate_tin($params) {
+        $this->load->model("tin_model");
+        $id = $params[0];
+        $this->tin_model->update(array("active" => 0), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
+    //remove a tin
+    function remove_tin($params) {
+        $this->load->model("tin_model");
+        $id = $params[0];
+        $this->tin_model->update(array("deleted" => 1), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
     function get_quan_huyen() {

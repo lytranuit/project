@@ -21,33 +21,33 @@
             </tr>
         </tfoot>
         <tbody>
-            @foreach($arr_users as $key=>$user)
+            <?php foreach($arr_users as $key=>$user): ?>
             <tr>
-                <td>{{$key+1}}</td>
-                <td>{{$user->username}}</td>
-                <td>{{$user->email}}</td>
+                <td><?php echo e($key+1); ?></td>
+                <td><?php echo e($user->username); ?></td>
+                <td><?php echo e($user->email); ?></td>
                 <td>
-                    <a class="groups_users" href="#" data-value="{{$user->groups}}"data-type="checklist" data-pk="1" data-url="{{base_url()}}member/change_group/{{$user->id}}" data-title="Select Group"></a>
+                    <a class="groups_users" href="#" data-value="<?php echo e($user->groups); ?>"data-type="checklist" data-pk="1" data-url="<?php echo e(base_url()); ?>member/change_group/<?php echo e($user->id); ?>" data-title="Select Group"></a>
                 </td>
                 <td>
-                    @if($user->active)
-                    <a href="{{base_url()}}member/deactivate/{{$user->id}}">
+                    <?php if($user->active): ?>
+                    <a href="<?php echo e(base_url()); ?>member/deactivate/<?php echo e($user->id); ?>">
                         <button class="btn btn-xs btn-success">
                             <i class="ace-icon fa fa-check bigger-120">
                             </i>
                         </button>
                     </a>
-                    @else
-                    <a href="{{base_url()}}member/activate/{{$user->id}}">
+                    <?php else: ?>
+                    <a href="<?php echo e(base_url()); ?>member/activate/<?php echo e($user->id); ?>">
                         <button class="btn btn-xs btn-danger">
                             <i class="ace-icon glyphicon-remove glyphicon bigger-120">
                             </i>
                         </button>
                     </a>
-                    @endif
+                    <?php endif; ?>
                 </td>
                 <td>
-                    <a href="{{base_url()}}member/remove_user/{{$user->id}}">
+                    <a href="<?php echo e(base_url()); ?>member/remove_user/<?php echo e($user->id); ?>">
                         <button class="btn btn-xs btn-danger">
                             <i class="ace-icon fa fa-trash-o bigger-120">
                             </i>
@@ -55,7 +55,7 @@
                     </a>
                 </td>
             </tr>
-            @endforeach
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>

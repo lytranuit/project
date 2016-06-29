@@ -100,6 +100,42 @@ class Index extends CI_Controller {
         }
     }
 
+    function signin() {
+        $this->data['title'] = $this->lang->line('create_user_heading');
+
+        if ($this->ion_auth->logged_in()) {
+            redirect('/', 'refresh');
+        }
+
+        $tables = $this->config->item('tables', 'ion_auth');
+        $identity_column = $this->config->item('identity', 'ion_auth');
+        $this->data['identity_column'] = $identity_column;
+
+        // validate form input
+        $this->form_validation->set_rules('ten', "", 'required');
+        if ($this->form_validation->run() == true) {
+            $email = $this->input->post('email');
+            $identity = $this->input->post('username');
+            $password = $this->input->post('password');
+
+            $additional_data = array(
+                'last_name' => $this->input->post('ten'),
+                'phone' => $this->input->post('dienthoai'),
+                'gioitinh' => $this->input->post("gioitinh")
+            );
+        }
+        if ($this->form_validation->run() == true && $this->ion_auth->register($identity, $password, $email, $additional_data)) {
+            // check to see if we are creating the user
+            // redirect them back to the admin page
+            $this->session->set_flashdata('message', "");
+            redirect("index/login", 'refresh');
+        } else {
+            $this->data['message'] = $this->session->flashdata('message');
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            echo $this->blade->view()->make('page/signin-page', $this->data)->render();
+        }
+    }
+
     // log the user out
     function logout() {
         $this->data['title'] = "Logout";
@@ -113,22 +149,37 @@ class Index extends CI_Controller {
         exit;
     }
 
-    private function javascript_tag() {
-        return '<script src="' . base_url() . 'public/js/jquery.js"></script>
-        <script src="' . base_url() . 'public/js/bootstrap.min.js"></script>
-        <script src="' . base_url() . 'public/js/jquery.prettyPhoto.js"></script>
-        <script src="' . base_url() . 'public/js/jquery.isotope.min.js"></script>
-        <script src="' . base_url() . 'public/js/main.js"></script>
-        <script src="' . base_url() . 'public/js/wow.min.js"></script>';
+    public function checkEmail() {
+        $email = $this->input->get('email');
+        $this->load->model("user_model");
+        $check = $this->user_model->where(array("email" => $email, "deleted" => 0))->as_array()->get_all();
+        if (!$check) {
+            echo json_encode(true);
+        } else {
+            echo json_encode(array("Email đã tồn tại!"));
+        }
     }
 
-    private function stylesheet_tag() {
-        return '<link href="' . base_url() . 'public/css/bootstrap.min.css" rel="stylesheet">
-        <link href="' . base_url() . 'public/css/font-awesome.min.css" rel="stylesheet">
-        <link href="' . base_url() . 'public/css/animate.min.css" rel="stylesheet">
-        <link href="' . base_url() . 'public/css/prettyPhoto.css" rel="stylesheet">
-        <link href="' . base_url() . 'public/css/main.css" rel="stylesheet">
-        <link href="' . base_url() . 'public/css/responsive.css" rel="stylesheet">';
+    public function checkUsername() {
+        $username = $this->input->get('username');
+        $this->load->model("user_model");
+        $check = $this->user_model->where(array("username" => $username, "deleted" => 0))->as_array()->get_all();
+        if (!$check) {
+            echo json_encode(true);
+        } else {
+            echo json_encode(array("Tài khoản đã tồn tại!"));
+        }
+    }
+
+    public function checkUserpass() {
+        $id = $this->input->post('id');
+        $pass = $this->input->post('passwordold');
+        $check = $this->ion_auth->hash_password_db($id, $pass);
+        if ($check === TRUE) {
+            echo json_encode(true);
+        } else {
+            echo json_encode(array("Password cũ không đúng!"));
+        }
     }
 
 }
