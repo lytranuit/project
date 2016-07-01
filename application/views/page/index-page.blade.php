@@ -67,8 +67,8 @@ Website @parent
 <section id="feature" >
     <div class="container">
         <div class="center wow fadeInDown">
-            <h2>Dịch vụ</h2>
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut <br> et dolore magna aliqua. Ut enim ad minim veniam</p>
+            <h2>Lĩnh vực hoạt động</h2>
+            <p class="lead">Công ty hoạt động trên nhiều lĩnh vực điển hình như:</p>
         </div>
 
         <div class="row">
@@ -76,48 +76,24 @@ Website @parent
                 <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
                     <div class="feature-wrap">
                         <i class="fa fa-bullhorn"></i>
-                        <h2>Fresh and Clean</h2>
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
+                        <h2>Môi giới.</h2>
+                        <h3>Môi giới bất động sản và đầu tư đất dự án.</h3>
                     </div>
                 </div><!--/.col-md-4-->
 
                 <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
                     <div class="feature-wrap">
                         <i class="fa fa-comments"></i>
-                        <h2>Retina ready</h2>
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
+                        <h2>Tư vấn và hỗ trợ.</h2>
+                        <h3>Đưa ra lời tư vấn và hỗ trợ khách hàng vay vốn đầu tư.</h3>
                     </div>
                 </div><!--/.col-md-4-->
 
                 <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
                     <div class="feature-wrap">
                         <i class="fa fa-cloud-download"></i>
-                        <h2>Easy to customize</h2>
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
-                    </div>
-                </div><!--/.col-md-4-->
-
-                <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
-                    <div class="feature-wrap">
-                        <i class="fa fa-leaf"></i>
-                        <h2>Adipisicing elit</h2>
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
-                    </div>
-                </div><!--/.col-md-4-->
-
-                <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
-                    <div class="feature-wrap">
-                        <i class="fa fa-cogs"></i>
-                        <h2>Sed do eiusmod</h2>
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
-                    </div>
-                </div><!--/.col-md-4-->
-
-                <div class="col-md-4 col-sm-6 wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
-                    <div class="feature-wrap">
-                        <i class="fa fa-heart"></i>
-                        <h2>Labore et dolore</h2>
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit</h3>
+                        <h2>Rao bán.</h2>
+                        <h3>Hỗ trợ đăng tin rao bán và cho thuê bất động sản.</h3>
                     </div>
                 </div><!--/.col-md-4-->
             </div><!--/.services-->
@@ -129,7 +105,7 @@ Website @parent
     <div class="container">
         <div class="center wow fadeInDown">
             <h2>Bất động sản cần bán</h2>
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut <br> et dolore magna aliqua. Ut enim ad minim veniam</p>
+            <p class="lead">Chúng tôi đã sàng lọc qua hàng trăm dự án tại Thành Phố Hồ Chí Minh, các Tỉnh lân cận và hân hạnh giới thiệu đến Quý khách một số dự án hấp dẫn, với vị trí đẹp, hồ sơ pháp lý hoàn chỉnh, giá rẻ, phương thức thanh toán linh hoạt, khả năng sinh lợi cao để Quý khách đầu tư hay an cư.</p>
         </div>
 
         <div class="row equal">
