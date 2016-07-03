@@ -65,11 +65,28 @@ jQuery(function ($) {
     $("a[rel^='prettyPhoto']").prettyPhoto({
         social_tools: false
     });
+    $(".tin-show,.box-list-po").each(function () {
+        var id = $(this).attr("data-id");
+        $(".swipebox-" + id).swipebox(
+                {
+                    afterClose: function () {
+                        //eventDetail();
+                        if ($('.ps-list ul li').length < 2) {
+                            $('.ps-list').hide();
+                        }
+                    }
+                }
+        );
+    });
+    $(".tin-show .jumbotron-overlay-down,.box-list-po .jumbotron-overlay-down").click(function () {
+        var parent = $(this).parents(".tin-show,.box-list-po");
+        var id = parent.attr("data-id");
+        $(".swipebox-" + id + ":first-child").trigger("click");
+    })
 
-
-
-    
-
-
+//    $(".tin-show").click(function () {
+//        var url = $(this).attr("data-url");
+//        window.location = url;
+//    });
 
 });

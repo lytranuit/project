@@ -1,7 +1,7 @@
 <div class="profile-sidebar">
     <!-- SIDEBAR USERPIC -->
     <div class="profile-userpic">
-        <img src="{{base_url()}}public/img/tran.jpg" class="img-responsive" alt="">
+        <img src="{{base_url()}}public/img/testimonial-dummy1.jpg" class="img-responsive" alt="">
     </div>
     <!-- END SIDEBAR USERPIC -->
     <!-- SIDEBAR USER TITLE -->
@@ -25,16 +25,29 @@
                     <i class="glyphicon glyphicon-lock"></i>
                     Thông tin tài khoản </a>
             </li>
+
+            <li>
+                <a href="{{base_url()}}member/quanlytin">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    Quản lý tin đăng</a>
+            </li>
+            @if($is_admin)
+            <li>
+                <a href="{{base_url()}}member/editgioithieu">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    Trang Giới thiệu </a>
+            </li>
             <li>
                 <a href="{{base_url()}}member/quanlyuser">
                     <i class="glyphicon glyphicon-user"></i>
                     Quản lý người dùng </a>
             </li>
             <li>
-                <a href="{{base_url()}}member/quanlytin">
+                <a href="{{base_url()}}member/quanlytintuc">
                     <i class="glyphicon glyphicon-flag"></i>
-                    Quản lý tin </a>
+                    Quản lý tin tức </a>
             </li>
+            @endif
         </ul>
     </div>
     <!-- END MENU -->

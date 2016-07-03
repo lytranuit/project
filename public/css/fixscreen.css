@@ -1,0 +1,99 @@
+@media (max-width: 1199px) {
+    /* Detail Page */
+    .property-detail-flexslider, .google-map, .property-detail-flexslider-floorplan {
+        height: 395px;
+    }
+
+    .property-detail-flexslider .flex-direction-nav,
+    .property-detail-flexslider .flex-viewport {
+        height: 395px;
+        width: 620px;
+    }
+
+    .well-preview .property-detail-flexslider .flex-direction-nav,
+    .well-preview .property-detail-flexslider .flex-viewport {
+        height: 395px;
+        width: 588px;
+    }
+
+    .property-detail-flexslider .flex-control-thumbs li {
+        margin-bottom: 7px;
+        height: 53px;
+    }
+
+    .property-detail-flexslider .jcarousel-container-vertical {
+        width: 90px;
+        padding: 5px;
+    }
+
+    .property-detail-flexslider .jcarousel-clip-vertical {
+        height: 352px;
+    }
+
+    .property-detail-flexslider .jcarousel-next,
+    .property-detail-flexslider .jcarousel-prev {
+        margin: 5.2px 0 0;
+        /*width: 40px;*/
+        width: 39px;
+    }
+    .property-detail-flexslider img {
+        max-height: 395px;
+    }
+}
+
+@media (max-width: 991px) {
+    .detail-fla-con-sha .favorite-fcsgroup, .detail-fla-con-sha .contact-seller-fcsgroup, .detail-fla-con-sha .share-fcsgroup {
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #e3e3e3;
+    }
+    .property-detail-flexslider img {
+        max-height: 395px;
+    }
+}
+
+
+@media (max-width: 991px) {
+    .detail-fla-con-sha .favorite-fcsgroup1, .detail-fla-con-sha .contact-seller-fcsgroup, .detail-fla-con-sha .share-fcsgroup {
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #e3e3e3;
+    }
+}
+
+@media (max-width: 767px) {
+
+    /* SLIDE PICTURE */
+    .property-detail-flexslider, .google-map {
+        width: 100%;
+        height: 230px;
+    }
+
+    .property-detail-flexslider .flex-direction-nav,
+    .property-detail-flexslider .flex-viewport {
+        width: 100%;
+        height: 230px;
+    }
+
+    .property-detail-flexslider .flex-control-thumbs li {
+        margin-bottom: 5px;
+        height: 37px;
+    }
+
+    .property-detail-flexslider .jcarousel-container-vertical {
+        display: none !important;
+        width: 60px;
+    }
+
+    .property-detail-flexslider .jcarousel-clip-vertical {
+        height: 210px;
+    }
+
+    .property-detail-flexslider .jcarousel-next,
+    .property-detail-flexslider .jcarousel-prev {
+        margin: 3px 0 0;
+    }
+    .property-detail-flexslider img {
+        max-height: 230px;
+    }
+}

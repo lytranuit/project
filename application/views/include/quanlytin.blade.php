@@ -40,10 +40,12 @@
                     @endif
                 </td>
                 <td>
-                    <button class="btn btn-xs btn-info">
-                        <i class="ace-icon fa fa-pencil bigger-120">
-                        </i>
-                    </button>
+                    <a href="{{base_url()}}member/edittin/{{$tin->id_tin}}">
+                        <button class="btn btn-xs btn-info">
+                            <i class="ace-icon fa fa-pencil bigger-120">
+                            </i>
+                        </button>
+                    </a>
                     <a href="{{base_url()}}member/remove_tin/{{$tin->id_tin}}">
                         <button class="btn btn-xs btn-danger">
                             <i class="ace-icon fa fa-trash-o bigger-120">

@@ -15,7 +15,7 @@
             <label for="post_contents">
                 Nội dung 
             </label><span class="text-danger">*</span><span class="error-place"></span>
-            <textarea name="post_contents" class="form-control" required=""></textarea>
+            <textarea name="post_contents" class="form-control" id="edit"required=""></textarea>
         </div>
         <div class="form-group col-md-6 parent">
             <label>
@@ -127,7 +127,10 @@
         var parent = $(".post_tp").val();
         get_quan_huyen(parent);
         /* dang tin */
-
+        $('#edit').froalaEditor({
+            heightMin: 200,
+            heightMax: 500
+        })
         $(document).on('change', '.post_tp', function () {
             var parent = $(this).val();
             get_quan_huyen(parent);

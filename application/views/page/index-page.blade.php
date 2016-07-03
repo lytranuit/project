@@ -4,7 +4,7 @@
 Website @parent
 @stop
 @section("content")
-<section id="main-slider" class="no-margin">
+<section id="main-slider" class="no-margin ">
     <div class="carousel slide">
         <ol class="carousel-indicators">
             <li data-target="#main-slider" data-slide-to="0" class="active"></li>
@@ -20,7 +20,7 @@ Website @parent
                             <div class="carousel-content">
                                 <h1 class="animation animated-item-1">Lorem ipsum dolor sit amet consectetur adipisicing elit</h1>
                                 <h2 class="animation animated-item-2">Accusantium doloremque laudantium totam rem aperiam, eaque ipsa...</h2>
-                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>
+                                <!--                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>-->
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@ Website @parent
                             <div class="carousel-content">
                                 <h1 class="animation animated-item-1">Lorem ipsum dolor sit amet consectetur adipisicing elit</h1>
                                 <h2 class="animation animated-item-2">Accusantium doloremque laudantium totam rem aperiam, eaque ipsa...</h2>
-                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>
+                                <!--                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>-->
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@ Website @parent
                             <div class="carousel-content">
                                 <h1 class="animation animated-item-1">Lorem ipsum dolor sit amet consectetur adipisicing elit</h1>
                                 <h2 class="animation animated-item-2">Accusantium doloremque laudantium totam rem aperiam, eaque ipsa...</h2>
-                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>
+                                <!--                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>-->
                             </div>
                         </div>
                     </div>
@@ -64,7 +64,7 @@ Website @parent
     </a>
 </section><!--/#main-slider-->
 
-<section id="feature" >
+<section id="feature" class="content-underlay">
     <div class="container">
         <div class="center wow fadeInDown">
             <h2>Lĩnh vực hoạt động</h2>
@@ -107,32 +107,14 @@ Website @parent
             <h2>Bất động sản cần bán</h2>
             <p class="lead">Chúng tôi đã sàng lọc qua hàng trăm dự án tại Thành Phố Hồ Chí Minh, các Tỉnh lân cận và hân hạnh giới thiệu đến Quý khách một số dự án hấp dẫn, với vị trí đẹp, hồ sơ pháp lý hoàn chỉnh, giá rẻ, phương thức thanh toán linh hoạt, khả năng sinh lợi cao để Quý khách đầu tư hay an cư.</p>
         </div>
-
-        <div class="row equal">
-            @foreach($arr_tin as $row)
-            <div class="col-md-6">
-                <div class="tin-show-grid wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="300ms">
-                    <div class="media">
-                        <div class="pull-left">
-                            <a href="#"><img class="media-object" src="{{base_url() . $row['hinhanh']}}" alt="" width="125px"></a>
-                        </div>
-                        <div class="media-body">
-                            <div class="row">
-                                <span class="tin-title col-xs-12">{{$row['title']}}</span>
-                                <span class="tin-dientich col-xs-12" style="color: gray;">Diện tích : {{number_format($row['dientich'])}} m2</span>
-                                <span class="tin-quan col-xs-12">{{$row['khuvuc']}}</span>
-                            </div>
-                        </div>
-                    </div><!--/.media -->
-                    <div class="row">
-                        <p class="col-xs-12 text-center tin-gia" style="">Giá : {{number_format($row['gia'])}} triệu VND</p>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-
-        </div><!--/.row-->
+        <?php echo $widget->tinnew(); ?>
     </div><!--/.container-->
 </section><!--/#recent-works-->
-
+<section id='tintuc-index' class="content-underlay" style="background: #ecf0f1">
+    <div class="container">
+        <div class="row">
+            <?php echo $widget->tintucslider(); ?>
+        </div>
+    </div><!--/.container-->
+</section>
 @stop

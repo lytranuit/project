@@ -8,25 +8,29 @@ class Index extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->library(array('ion_auth', 'form_validation'));
+        $this->load->library(array('ion_auth', 'form_validation', 'widget'));
         $this->load->helper(array('url', 'language'));
         $this->lang->load('auth');
-        ////////////////////////////////
+////////////////////////////////
         $module = $this->router->fetch_module();
         $views = APPPATH . "views/";
         $cache = APPPATH . "cache/";
         $this->blade = new Blade($views, $cache);
-        ////////////
+////////////
         $this->data['is_login'] = $this->ion_auth->logged_in();
 
-        ////////////////////////////////// Stle mac dinh
+        $this->data['widget'] = $this->widget;
+////////////////////////////////// Stle mac dinh
         $this->data['stylesheet_tag'] = array(
             base_url() . "public/css/bootstrap.min.css",
             base_url() . "public/css/font-awesome.min.css",
             base_url() . "public/css/animate.min.css",
             base_url() . "public/css/prettyPhoto.css",
+            base_url() . "public/css/fixscreen.css",
             base_url() . "public/css/main.css",
             base_url() . "public/css/responsive.css",
+            base_url() . "public/css/swipebox.min.css",
+            base_url() . "public/css/overlay-bootstrap.css"
         );
         $this->data['javascript_tag'] = array(
             base_url() . "public/js/jquery.js",
@@ -36,32 +40,37 @@ class Index extends CI_Controller {
             base_url() . "public/js/jquery.isotope.min.js",
             base_url() . "public/js/main.js",
             base_url() . "public/js/wow.min.js",
+            base_url() . "public/js/moment.js",
+            base_url() . "public/js/jquery.swipebox.js"
         );
     }
 
-    public function index() {
-        $id_user = $this->session->userdata('user_id');
-        $this->load->model("tin_model");
-        $this->load->model("user_model");
-        $this->load->model("khuvuc_model");
-        $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0, 'active' => 1))->as_array()->get_all();
-        foreach ($this->data['arr_tin'] as &$row) {
-            $arr_hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
-            if (count($arr_hinhanh)) {
-                $hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
-            } else {
-                $hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
-            }
-            $author = $this->user_model->where(array('id' => $row['id_user']))->as_array()->get_all();
-            $khuvuc = $this->khuvuc_model->where(array('id_khuvuc' => $row['id_khuvuc']))->as_array()->get_all();
-            $row['hinhanh'] = $hinhanh[0]['src'];
-            $row['author'] = $author[0]['username'];
-            $row['khuvuc'] = $khuvuc[0]['ten_khuvuc'];
+    public function _remap($method, $params = array()) {
+        if (!method_exists($this, $method)) {
+            show_404();
         }
+        $this->$method($params);
+    }
+
+    public function page_404() {
+        echo $this->blade->view()->make('page/404-page', $this->data)->render();
+    }
+
+    public function index() {
 //        echo "<pre>";
 //        print_r($this->data['arr_tin']);
 //        die();
+
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
         echo $this->blade->view()->make('page/index-page', $this->data)->render();
+    }
+
+    function gioithieu() {
+        $this->load->model("option_model");
+        $gioithieu = $this->option_model->where(array("name" => 'gioi-thieu'))->as_array()->get_all();
+        $this->data['gioithieu'] = $gioithieu[0];
+        echo $this->blade->view()->make('page/gioithieu-page', $this->data)->render();
     }
 
     function login() {
@@ -134,6 +143,105 @@ class Index extends CI_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
             echo $this->blade->view()->make('page/signin-page', $this->data)->render();
         }
+    }
+
+    public function tin($param) {
+        $id = $param[0];
+        $this->load->model("tin_model");
+        $this->load->model("user_model");
+        $this->load->model("huong_model");
+        $this->load->model("phaply_model");
+        $tin = $this->tin_model->where(array('id_tin' => $id))->as_array()->get_all();
+        $author = $this->user_model->where(array("id" => $tin[0]['id_user']))->fields(array("username"))->as_array()->get_all();
+        $huong = $this->huong_model->where(array("id_huong" => $tin[0]['id_huong']))->fields(array("ten_huong"))->as_array()->get_all();
+        $phaply = $this->phaply_model->where(array("id_phaply" => $tin[0]['id_phaply']))->fields(array("ten_phaply"))->as_array()->get_all();
+        $arr_hinhanh = $this->tin_model->get_tin_hinhanh($tin[0]['id_tin']);
+
+        $tin[0]['author'] = $author[0]['username'];
+        $tin[0]['phaply'] = $phaply[0]['ten_phaply'];
+        $tin[0]['huong'] = $huong[0]['ten_huong'];
+        $tin[0]['arr_hinhanh'] = $arr_hinhanh;
+        $this->data['tin'] = $tin[0];
+//        echo "<pre>";
+//        print_r($tin);
+//        die();
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.jcarousel.min.js");
+        echo $this->blade->view()->make('page/tin-page', $this->data)->render();
+    }
+
+    function searchtin() {
+        $this->load->model("tin_model");
+        $this->load->model("user_model");
+        $this->load->model("khuvuc_model");
+        $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0))->as_array()->get_all();
+        foreach ($this->data['arr_tin'] as $k => &$tin) {
+            $author = $this->user_model->where(array("id" => $tin['id_user']))->fields(array("username"))->as_array()->get_all();
+            $arr_hinhanh = $this->tin_model->get_tin_hinhanh($tin['id_tin']);
+            $quan = $this->khuvuc_model->where(array("id_khuvuc" => $tin['id_khuvuc']))->as_array()->get_all();
+            $tin['author'] = $author[0]['username'];
+            $tin['arr_hinhanh'] = $arr_hinhanh;
+            $tin['khuvuc'] = $quan[0]['ten_khuvuc'];
+            if ($tin['gia'] != 0) {
+                if ($tin['gia'] < 1000) {
+                    $tin['gia'] = $tin['gia'] . " triệu";
+                } else {
+                    if ($tin['gia'] % 1000) {
+                        $tin['gia'] = number_format($tin['gia'] / 1000, 2, ',') . " tỉ";
+                    } else {
+                        $tin['gia'] = number_format($tin['gia'] / 1000) . " tỉ";
+                    }
+                }
+            } else {
+                $tin['gia'] = "Thương lượng";
+            }
+        }
+//        echo "<pre>";
+//        print_r($this->data['arr_tin']);
+//        die();
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/owl.theme.css");
+        echo $this->blade->view()->make('page/searchtin-page', $this->data)->render();
+    }
+
+    public function tintuc($param) {
+        $id = $param[0];
+        $this->load->model("tintuc_model");
+        $this->load->model("user_model");
+        $tin = $this->tintuc_model->where(array('id_tintuc' => $id))->as_array()->get_all();
+        $author = $this->user_model->where(array("id" => $tin[0]['id_user']))->fields(array("username"))->as_array()->get_all();
+        $arr_hinhanh = $this->tintuc_model->get_tintuc_hinhanh($tin[0]['id_tintuc']);
+
+        $tin[0]['author'] = $author[0]['username'];
+        $tin[0]['arr_hinhanh'] = $arr_hinhanh;
+        $this->data['tin'] = $tin[0];
+//        echo "<pre>";
+//        print_r($tin);
+//        die();
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.jcarousel.min.js");
+        echo $this->blade->view()->make('page/tintuc-page', $this->data)->render();
+    }
+
+    function searchtintuc() {
+        $this->load->model("tintuc_model");
+        $this->load->model("user_model");
+        $this->data['arr_tin'] = $this->tintuc_model->where(array('deleted' => 0))->as_array()->get_all();
+        foreach ($this->data['arr_tin'] as $k => &$tin) {
+            $author = $this->user_model->where(array("id" => $tin['id_user']))->fields(array("username"))->as_array()->get_all();
+            $arr_hinhanh = $this->tintuc_model->get_tintuc_hinhanh($tin['id_tintuc']);
+            $tin['author'] = $author[0]['username'];
+            $tin['arr_hinhanh'] = $arr_hinhanh;
+        }
+//        echo "<pre>";
+//        print_r($this->data['arr_tin']);
+//        die();
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+        echo $this->blade->view()->make('page/searchtintuc-page', $this->data)->render();
     }
 
     // log the user out

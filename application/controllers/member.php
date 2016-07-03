@@ -18,6 +18,7 @@ class Member extends CI_Controller {
         $this->blade = new Blade($views, $cache);
         ////////////
         $this->data['is_login'] = $this->ion_auth->logged_in();
+        $this->data['is_admin'] = $this->ion_auth->is_admin();
         $this->data['func'] = $this->router->fetch_method();
         ////////////////////////////////// Stle mac dinh
         $this->data['stylesheet_tag'] = array(
@@ -46,9 +47,49 @@ class Member extends CI_Controller {
         if (!$this->ion_auth->logged_in()) {
 //redirect them to the login page
             redirect("index/login", "refresh");
-        } else {
+        } else if ($this->has_right($method, $params)) {
             $this->$method($params);
+        } else {
+            show_404();
         }
+    }
+
+    private function has_right($method, $params = array()) {
+        /* check admin */
+        $fun_admin = array(
+            "quanlyuser",
+            "change_group",
+            "remove_user",
+            "activate",
+            "deactivate",
+            "quanlytintuc",
+            "dangtintuc",
+            "edittintuc",
+            "activate_tintuc",
+            "deactivate_tintuc",
+            "remove_tintuc",
+            "editgioithieu",
+        );
+        if (in_array($method, $fun_admin)) {
+            return false;
+        }
+        /* Tin đăng check */
+        $fun_tin = array(
+            "edittin",
+            "activate_tin",
+            "deactivate_tin",
+            "remove_tin",
+        );
+        if (in_array($method, $fun_admin)) {
+            $id = $param[0];
+            $id_user = $this->session->userdata('user_id');
+            $this->load->model("tin_model");
+            $tin = $this->tin_model->where(array('deleted' => 0, 'id_user' => $id_user, 'id_tin' => $id))->as_array()->get_all();
+            if (count($tin)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public function index() { /////// trang ca nhan
@@ -70,6 +111,10 @@ class Member extends CI_Controller {
             echo $this->blade->view()->make('page/thongtin-page', $this->data)->render();
         }
     }
+
+    /*
+     * QUản lý User
+     */
 
     public function quanlyuser() {
         $this->load->model("user_model");
@@ -149,10 +194,18 @@ class Member extends CI_Controller {
         exit;
     }
 
+    /*
+     * TIN
+     */
+
     public function quanlytin() {
         $id_user = $this->session->userdata('user_id');
         $this->load->model("tin_model");
-        $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0))->as_object()->get_all();
+        if ($this->ion_auth->is_admin()) {
+            $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0))->as_object()->get_all();
+        } else {
+            $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0, 'id_user' => $id_user))->as_object()->get_all();
+        }
         foreach ($this->data['arr_tin'] as $k => &$tin) {
             $tin->title = mb_substr($tin->title, 0, 50) . "...";
         }
@@ -211,11 +264,160 @@ class Member extends CI_Controller {
             $this->data['huong'] = $this->huong_model->where(array('deleted' => 0))->order_by("order")->as_array()->get_all();
             $this->data['phaply'] = $this->phaply_model->where(array('deleted' => 0))->order_by("order")->as_array()->get_all();
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/fileinput.css");
+
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
+            /////////// Plugin
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/colors.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/emoticons.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/file.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/fullscreen.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image_manager.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/line_breaker.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/quick_insert.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/table.css");
+
             array_push($this->data['javascript_tag'], base_url() . "public/js/autoNumeric.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
-
+            ///////// Editor
+            array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
+            /////////// Plugin
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/colors.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/emoticons.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/entities.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/font_size.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/fullscreen.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image_manager.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/link.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/lists.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_format.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_style.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/quick_insert.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/save.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
             echo $this->blade->view()->make('page/dangtin-page', $this->data)->render();
+        }
+    }
+
+    function edittin($param) {
+        $id = $param[0];
+        if (isset($_POST['dangtin'])) {
+            $post_title = $_POST['post_titles'];
+            $post_content = $_POST['post_contents'];
+            $post_tp = $_POST['post_tp'];
+            $post_quan = $_POST['post_quan'];
+            $post_dientich = $_POST['dientich'];
+            $post_gia = $_POST['gia_ban'];
+            $post_rong = $_POST['chieurong'];
+            $post_dai = $_POST['chieudai'];
+            $post_huong = $_POST['huong'];
+            $post_phaply = $_POST['phaply'];
+            $post_diachi = $_POST['diachi'];
+            $user_id = $this->session->userdata('user_id');
+            $data_up = array(
+                'title' => $post_title,
+                'alias' => sluggable($post_title),
+                'content' => $post_content,
+                'id_khuvuc' => $post_quan,
+                'date' => date("Y-m-d H:i:s"),
+                'id_user' => $user_id,
+                'id_phaply' => $post_phaply,
+                'id_huong' => $post_huong,
+                'diachi' => $post_diachi,
+                'chieudai' => $post_dai,
+                'chieurong' => $post_rong,
+                'gia' => $post_gia,
+                'dientich' => $post_dientich
+            );
+            $this->load->model("tin_model");
+            $this->load->model("hinhanh_tin_model");
+            $this->load->model("hinhanh_model");
+            $this->tin_model->update($data_up, $id);
+            $hinhanh = $this->input->post('id_hinhanh');
+            $this->hinhanh_tin_model->where(array("id_tin" => $id))->update(array('deleted' => 1));
+            if (count($hinhanh) > 0) {
+                foreach ($hinhanh as $hinh) {
+                    $this->hinhanh_tin_model->insert(array('id_tin' => $id, 'id_hinhanh' => $hinh));
+                    $this->hinhanh_model->update(array('deleted' => 0), $hinh);
+                }
+            }
+            redirect('member/quanlytin', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
+        } else {
+            $this->load->model("tin_model");
+            $this->load->model("khuvuc_model");
+            $this->load->model("huong_model");
+            $this->load->model("phaply_model");
+            $tin = $this->tin_model->where(array('id_tin' => $id))->as_array()->get_all();
+            $quan = $this->khuvuc_model->where(array("id_khuvuc" => $tin[0]['id_khuvuc']))->as_array()->get_all();
+            $tin[0]['quan'] = $quan[0]['id_khuvuc'];
+            $tin[0]['thanhpho'] = $quan[0]['parent'];
+
+            $this->data['thanhpho'] = $this->khuvuc_model->where(array("deleted" => 0, "parent" => 0))->as_array()->get_all();
+            $this->data['quan'] = $this->khuvuc_model->where(array("deleted" => 0, "parent" => $quan[0]['parent']))->as_array()->get_all();
+            $this->data['huong'] = $this->huong_model->where(array('deleted' => 0))->order_by("order")->as_array()->get_all();
+            $this->data['phaply'] = $this->phaply_model->where(array('deleted' => 0))->order_by("order")->as_array()->get_all();
+            $arr_hinhanh = $this->tin_model->get_tin_hinhanh($tin[0]['id_tin']);
+            $tin[0]['arr_hinhanh'] = $arr_hinhanh;
+//            echo "<pre>";
+//            print_r($arr_hinhanh);
+//            die();
+            $this->data['tin'] = $tin[0];
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/fileinput.css");
+
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
+            /////////// Plugin
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/colors.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/emoticons.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/file.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/fullscreen.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image_manager.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/line_breaker.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/quick_insert.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/table.css");
+
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
+            ///////// Editor
+            array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
+            /////////// Plugin
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/colors.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/emoticons.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/entities.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/font_size.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/fullscreen.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image_manager.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/link.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/lists.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_format.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_style.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/quick_insert.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/save.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
+            echo $this->blade->view()->make('page/edittin-page', $this->data)->render();
         }
     }
 
@@ -246,6 +448,204 @@ class Member extends CI_Controller {
         exit;
     }
 
+    /*
+     * Tin Tuc
+     */
+
+    public function quanlytintuc() {
+        $id_user = $this->session->userdata('user_id');
+        $this->load->model("tintuc_model");
+        $this->data['arr_tin'] = $this->tintuc_model->where(array('deleted' => 0))->as_object()->get_all();
+        foreach ($this->data['arr_tin'] as $k => &$tin) {
+            $tin->title = mb_substr($tin->title, 0, 50) . "...";
+        }
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
+        echo $this->blade->view()->make('page/quanlytintuc-page', $this->data)->render();
+    }
+
+    public function dangtintuc() { ////////// Trang dang tin
+        if (isset($_POST['dangtin'])) {
+            $post_title = $_POST['post_titles'];
+            $post_content = $_POST['post_contents'];
+            $user_id = $this->session->userdata('user_id');
+            $data_up = array(
+                'title' => $post_title,
+                'alias' => sluggable($post_title),
+                'content' => $post_content,
+                'date' => date("Y-m-d H:i:s"),
+                'id_user' => $user_id
+            );
+            $this->load->model("tintuc_model");
+            $this->load->model("hinhanh_tintuc_model");
+            $this->load->model("hinhanh_model");
+            $id_tintuc = $this->tintuc_model->insert($data_up);
+            $hinhanh = $this->input->post('id_hinhanh');
+            if (count($hinhanh) > 0) {
+                foreach ($hinhanh as $hinh) {
+                    $this->hinhanh_tintuc_model->insert(array('id_tintuc' => $id_tintuc, 'id_hinhanh' => $hinh));
+                    $this->hinhanh_model->update(array('deleted' => 0), $hinh);
+                }
+            }
+            redirect('member/quanlytintuc', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
+        } else {
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/fileinput.css");
+
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
+            /////////// Plugin
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/colors.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/emoticons.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/file.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/fullscreen.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image_manager.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/line_breaker.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/quick_insert.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/table.css");
+
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
+            ///////// Editor
+            array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
+            /////////// Plugin
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/colors.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/emoticons.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/entities.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/font_size.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/fullscreen.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image_manager.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/link.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/lists.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_format.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_style.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/quick_insert.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/save.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
+            echo $this->blade->view()->make('page/dangtintuc-page', $this->data)->render();
+        }
+    }
+
+    function edittintuc($param) {
+        $id = $param[0];
+        if (isset($_POST['dangtin'])) {
+            $post_title = $_POST['post_titles'];
+            $post_content = $_POST['post_contents'];
+            $user_id = $this->session->userdata('user_id');
+            $data_up = array(
+                'title' => $post_title,
+                'alias' => sluggable($post_title),
+                'content' => $post_content,
+                'date' => date("Y-m-d H:i:s"),
+                'id_user' => $user_id
+            );
+            $this->load->model("tintuc_model");
+            $this->load->model("hinhanh_tintuc_model");
+            $this->load->model("hinhanh_model");
+            $this->tintuc_model->update($data_up, $id);
+            $hinhanh = $this->input->post('id_hinhanh');
+            $this->hinhanh_tintuc_model->where(array("id_tintuc" => $id))->update(array('deleted' => 1));
+            if (count($hinhanh) > 0) {
+                foreach ($hinhanh as $hinh) {
+                    $this->hinhanh_tintuc_model->insert(array('id_tintuc' => $id, 'id_hinhanh' => $hinh));
+                    $this->hinhanh_model->update(array('deleted' => 0), $hinh);
+                }
+            }
+            redirect('member/quanlytintuc', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
+        } else {
+            $this->load->model("tintuc_model");
+            $tin = $this->tintuc_model->where(array('id_tintuc' => $id))->as_array()->get_all();
+            $arr_hinhanh = $this->tintuc_model->get_tintuc_hinhanh($tin[0]['id_tintuc']);
+            $tin[0]['arr_hinhanh'] = $arr_hinhanh;
+//            echo "<pre>";
+//            print_r($arr_hinhanh);
+//            die();
+            $this->data['tin'] = $tin[0];
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/fileinput.css");
+
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
+            /////////// Plugin
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/colors.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/emoticons.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/file.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/fullscreen.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image_manager.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/line_breaker.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/quick_insert.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/table.css");
+
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
+            ///////// Editor
+            array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
+            /////////// Plugin
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/colors.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/emoticons.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/entities.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/font_size.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/fullscreen.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image_manager.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/link.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/lists.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_format.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_style.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/quick_insert.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/save.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
+            echo $this->blade->view()->make('page/edittintuc-page', $this->data)->render();
+        }
+    }
+
+    // activate the tin
+    function activate_tintuc($params) {
+        $this->load->model("tintuc_model");
+        $id = $params[0];
+        $this->tintuc_model->update(array("active" => 1), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
+    // deactivate the tin
+    function deactivate_tintuc($params) {
+        $this->load->model("tintuc_model");
+        $id = $params[0];
+        $this->tintuc_model->update(array("active" => 0), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
+    //remove a tin
+    function remove_tintuc($params) {
+        $this->load->model("tintuc_model");
+        $id = $params[0];
+        $this->tintuc_model->update(array("deleted" => 1), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
+    }
+
     function get_quan_huyen() {
         if (isset($_GET['parent']))
             $parent = $_GET['parent'];
@@ -258,6 +658,69 @@ class Member extends CI_Controller {
             echo '<option value="' . $cate['id_khuvuc'] . '">' . $cate['ten_khuvuc'] . '</option>';
         }
     }
+
+    /*
+     * Giới thiệu Amdin
+     */
+
+    public function editgioithieu() {
+        $this->load->model("option_model");
+        if (!isset($_POST['dangtin'])) {
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
+            /////////// Plugin
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/colors.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/emoticons.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/file.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/fullscreen.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/image_manager.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/line_breaker.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/quick_insert.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/table.css");
+
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            ///////// Editor
+            array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
+            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
+            /////////// Plugin
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/colors.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/emoticons.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/entities.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/font_size.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/fullscreen.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/image_manager.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/link.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/lists.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_format.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/paragraph_style.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/quick_insert.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/save.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
+            $gioithieu = $this->option_model->where(array("name" => 'gioi-thieu'))->as_array()->get_all();
+            $this->data['gioithieu'] = $gioithieu[0];
+            echo $this->blade->view()->make('page/editgioithieu-page', $this->data)->render();
+        } else {
+            $content = $this->input->post("post_contents");
+            $id = $this->input->post("id");
+            $this->option_model->update(array("content" => $content), $id);
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
+    }
+
+    /*
+     * UPload hình ảnh
+     */
 
     public function uploadhinhanh() {
         ini_set('post_max_size', '64M');
@@ -339,12 +802,12 @@ class Member extends CI_Controller {
                 $config = array();
                 $config['image_library'] = 'gd2';
                 $config['source_image'] = $data['full_path'];
-                $config['new_image'] = $data['file_path'] . "252x252_" . $data['file_name'];
+                $config['new_image'] = $data['file_path'] . "125x100_" . $data['file_name'];
                 $config['create_thumb'] = FALSE;
                 $config['maintain_ratio'] = FALSE;
                 $config['quality'] = "100%";
-                $config['width'] = 252;
-                $config['height'] = 252;
+                $config['width'] = 125;
+                $config['height'] = 100;
                 $dim = (intval($data["image_width"]) / intval($data["image_height"])) - ($config['width'] / $config['height']);
                 $config['master_dim'] = ($dim > 0) ? "height" : "width";
                 $this->load->library('image_lib');
@@ -366,6 +829,8 @@ class Member extends CI_Controller {
                         'ten_hinhanh' => $info->name,
                         'real_hinhanh' => $real_name,
                         'src' => $info->url,
+                        'thumb_src' => $upload_path_url . "125x100_" . $data['file_name'],
+                        'bg_src' => $upload_path_url . "768x576_" . $data['file_name'],
                         'id_user' => $this->session->userdata('user_id'),
                         'deleted' => 1,
                         'date' => date("Y-m-d H:i:s")
