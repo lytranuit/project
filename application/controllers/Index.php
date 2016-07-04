@@ -43,6 +43,20 @@ class Index extends CI_Controller {
             base_url() . "public/js/moment.js",
             base_url() . "public/js/jquery.swipebox.js"
         );
+        $module = $this->router->fetch_module();
+        $class = $this->router->fetch_class(); // class = controller
+        $method = $this->router->fetch_method();
+        $this->load->model("page_model");
+        $page = $this->page_model->where(array("deleted" => 0, "module" => $module, "controller" => $class, "method" => $method))->as_array()->get_all();
+        if (count($page)) {
+            $this->data['content'] = $method;
+            $this->data['template'] = $page[0]['template'];
+            $this->data['title'] = $page[0]['page'];
+        } else { //////// Default
+            $this->data['content'] = $method;
+            $this->data['template'] = "template";
+            $this->data['title'] = "";
+        }
     }
 
     public function _remap($method, $params = array()) {
@@ -63,14 +77,14 @@ class Index extends CI_Controller {
 
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
-        echo $this->blade->view()->make('page/index-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     function gioithieu() {
         $this->load->model("option_model");
         $gioithieu = $this->option_model->where(array("name" => 'gioi-thieu'))->as_array()->get_all();
         $this->data['gioithieu'] = $gioithieu[0];
-        echo $this->blade->view()->make('page/gioithieu-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     function login() {
@@ -102,7 +116,7 @@ class Index extends CI_Controller {
                 // the user is not logging in so display the login page
                 // set the flash data error message if there is one
                 $this->data['message'] = $this->session->flashdata('message');
-                echo $this->blade->view()->make('page/login-page', $this->data)->render();
+                echo $this->blade->view()->make('page/page', $this->data)->render();
             }
         } else {
             redirect('index', 'refresh'); // use redirects instead of loading views for compatibility with MY_Controller libraries
