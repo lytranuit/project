@@ -11,6 +11,7 @@ class Index extends CI_Controller {
         $this->load->library(array('ion_auth', 'form_validation', 'widget'));
         $this->load->helper(array('url', 'language'));
         $this->lang->load('auth');
+        $this->load->model("page_model");
 ////////////////////////////////
         $module = $this->router->fetch_module();
         $views = APPPATH . "views/";
@@ -46,7 +47,7 @@ class Index extends CI_Controller {
         $module = $this->router->fetch_module();
         $class = $this->router->fetch_class(); // class = controller
         $method = $this->router->fetch_method();
-        $this->load->model("page_model");
+
         $page = $this->page_model->where(array("deleted" => 0, "module" => $module, "controller" => $class, "method" => $method))->as_array()->get_all();
         if (count($page)) {
             $this->data['content'] = $method;
@@ -68,6 +69,20 @@ class Index extends CI_Controller {
 
     public function page_404() {
         echo $this->blade->view()->make('page/404-page', $this->data)->render();
+    }
+
+    public function quanlypage() {
+        //phpinfo();die();
+        $this->data['template'] = "box";
+        $arr_page = $this->page_model->where(array("deleted" => 0))->as_array()->get_all();
+        $this->data['arr_page'] = $arr_page;
+
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     public function index() {
