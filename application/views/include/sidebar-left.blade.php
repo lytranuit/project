@@ -23,7 +23,8 @@
             <li>
                 <a href="{{base_url()}}member">
                     <i class="glyphicon glyphicon-lock"></i>
-                    Thông tin tài khoản </a>
+                    Thông tin tài khoản 
+                </a>
             </li>
 
             <li>
@@ -32,10 +33,16 @@
                     Quản lý tin đăng</a>
             </li>
             @if($is_admin)
+
             <li>
                 <a href="{{base_url()}}member/editgioithieu">
                     <i class="glyphicon glyphicon-flag"></i>
                     Trang Giới thiệu </a>
+            </li>
+            <li>
+                <a href="{{base_url()}}member/slider">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    Slider </a>
             </li>
             <li>
                 <a href="{{base_url()}}member/quanlyuser">

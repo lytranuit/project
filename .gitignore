@@ -13,3 +13,4 @@ composer.phar
 application/logs/
 /application/cache
 /system
+/application/config/config.php

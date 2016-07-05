@@ -40,6 +40,7 @@
         allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         maxFileSize: 10000,
         maxFileCount: 1,
+        overwriteInitial: false,
         validateInitialCount: true
     });
     $("#hinh-anh").on('fileuploaded', function (event, data, previewId, index) {

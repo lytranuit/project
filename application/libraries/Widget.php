@@ -134,11 +134,23 @@ class Widget {
                 $hinhanh = $this->CI->hinhanh_model->where(array("default" => 1, 'deleted' => 0))->as_array()->get_all();
             }
             $author = $this->CI->user_model->where(array('id' => $row['id_user']))->as_array()->get_all();
-            $row['hinhanh'] = $hinhanh[0]['bg_src'];
+            $row['hinhanh'] = $hinhanh[0]['slider_src'];
 
             $row['author'] = $author[0]['username'];
         }
         echo $this->blade->view()->make('widget/tintucslider', $this->data)->render();
+    }
+
+    function sliderhome() {
+        $this->CI->load->model("slider_model");
+        $this->CI->load->model("hinhanh_model");
+        $arr_slider = $this->CI->slider_model->where(array('deleted' => 0))->as_array()->get_all();
+        foreach ($arr_slider as &$slider) {
+            $hinh = $this->CI->hinhanh_model->where(array('id_hinhanh' => $slider['id_hinhanh']))->as_array()->get_all();
+            $slider['hinhanh'] = $hinh[0]['bg_src'];
+        }
+        $this->data['arr_slider'] = $arr_slider;
+        echo $this->blade->view()->make('widget/slider', $this->data)->render();
     }
 
     function khuvuc() {

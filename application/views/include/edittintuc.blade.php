@@ -52,6 +52,7 @@
         maxFileSize: 10000,
         maxFileCount: 1,
         validateInitialCount: true,
+        overwriteInitial: false,
         initialPreview: [
 <?= $html ?>
         ],

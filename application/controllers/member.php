@@ -8,7 +8,7 @@ class Member extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->library(array('ion_auth', 'form_validation'));
+        $this->load->library(array('ion_auth', 'form_validation', 'widget'));
         $this->load->helper(array('url', 'language', 'alias'));
         $this->lang->load('auth');
         ////////////////////////////////
@@ -20,6 +20,7 @@ class Member extends CI_Controller {
         $this->data['is_login'] = $this->ion_auth->logged_in();
         $this->data['is_admin'] = $this->ion_auth->is_admin();
         $this->data['func'] = $this->router->fetch_method();
+        $this->data['widget'] = $this->widget;
         ////////////////////////////////// Stle mac dinh
         $this->data['stylesheet_tag'] = array(
             base_url() . "public/css/bootstrap.min.css",
@@ -38,6 +39,20 @@ class Member extends CI_Controller {
             base_url() . "public/js/main.js",
             base_url() . "public/js/wow.min.js",
         );
+        $module = $this->router->fetch_module();
+        $class = $this->router->fetch_class(); // class = controller
+        $method = $this->router->fetch_method();
+        $this->load->model("page_model");
+        $page = $this->page_model->where(array("deleted" => 0, "module" => $module, "controller" => $class, "method" => $method))->as_array()->get_all();
+        if (count($page)) {
+            $this->data['content'] = $method;
+            $this->data['template'] = $page[0]['template'];
+            $this->data['title'] = $page[0]['page'];
+        } else { //////// Default
+            $this->data['content'] = $method;
+            $this->data['template'] = "left";
+            $this->data['title'] = "";
+        }
     }
 
     public function _remap($method, $params = array()) {
@@ -47,8 +62,10 @@ class Member extends CI_Controller {
         if (!$this->ion_auth->logged_in()) {
 //redirect them to the login page
             redirect("index/login", "refresh");
-        } else {
+        } elseif ($this->has_right($method, $params)) {
             $this->$method($params);
+        } else {
+            show_404();
         }
     }
 
@@ -67,8 +84,9 @@ class Member extends CI_Controller {
             "deactivate_tintuc",
             "remove_tintuc",
             "editgioithieu",
+            "slider",
         );
-        if (in_array($method, $fun_admin)) {
+        if (in_array($method, $fun_admin) && !$this->ion_auth->is_admin()) {
             return false;
         }
         /* Tin đăng check */
@@ -107,6 +125,68 @@ class Member extends CI_Controller {
             $this->data['user'] = $user[0];
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
             echo $this->blade->view()->make('page/thongtin-page', $this->data)->render();
+        }
+    }
+
+    public function slider() {
+        $id_user = $this->session->userdata('user_id');
+        if (isset($_POST['slider'])) {
+            $this->load->model("slider_model");
+            $this->load->model("hinhanh_model");
+            $arr_id = $this->input->post('id');
+            $arr_idhinhanh = $this->input->post('id_hinhanh');
+            $arr_text1 = $this->input->post('text1');
+            $arr_text2 = $this->input->post('text2');
+            $arr_text3 = $this->input->post('text3');
+            $arr_deleted = $this->input->post('id_deleted');
+            foreach ($arr_id as $key => $id) {
+                if (is_numeric($id)) { /////// update
+                    $additional_data = array(
+                        'id_hinhanh' => $arr_idhinhanh[$key],
+                        'animate_1' => $arr_text1[$key],
+                        'animate_2' => $arr_text2[$key],
+                        'animate_3' => $arr_text3[$key]
+                    );
+                    $this->slider_model->update($additional_data, $id);
+                    $this->hinhanh_model->update(array('deleted' => 0), $arr_idhinhanh[$key]);
+                } else { ////// insert
+                    $additional_data = array(
+                        'id_hinhanh' => $arr_idhinhanh[$key],
+                        'animate_1' => $arr_text1[$key],
+                        'animate_2' => $arr_text2[$key],
+                        'animate_3' => $arr_text3[$key]
+                    );
+                    $this->slider_model->insert($additional_data);
+                    $this->hinhanh_model->update(array('deleted' => 0), $arr_idhinhanh[$key]);
+                }
+            }
+            foreach ($arr_deleted as $id) {
+                $this->slider_model->update(array("deleted" => 1), $id);
+            }
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit;
+        } else {
+            $this->load->model("slider_model");
+            $this->load->model("hinhanh_model");
+            $arr_slider = $this->slider_model->where(array('deleted' => 0))->as_array()->get_all();
+            foreach ($arr_slider as &$slider) {
+                $hinh = $this->hinhanh_model->where(array('id_hinhanh' => $slider['id_hinhanh']))->as_array()->get_all();
+                $html = "\"<img src='" . base_url() . $hinh[0]['thumb_src'] . "' class='file-preview-image' alt='" . $hinh[0]['ten_hinhanh'] . "' title='" . $hinh[0]['ten_hinhanh'] . "'>\",";
+                $htmlcon = "{
+                        caption: '" . $hinh[0]['ten_hinhanh'] . "',
+                        width: '120px',
+                        url: '" . base_url() . "member/deleteImage/1',
+                        key: " . $hinh[0]['id_hinhanh'] . "
+                    },";
+                $slider['hinhhtml'] = $html;
+                $slider['hinhconf'] = $htmlcon;
+            }
+            $this->data['arr_slider'] = $arr_slider;
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/fileinput.css");
+
+            array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -800,6 +880,21 @@ class Member extends CI_Controller {
                 $config = array();
                 $config['image_library'] = 'gd2';
                 $config['source_image'] = $data['full_path'];
+                $config['new_image'] = $data['file_path'] . "1375x768_" . $data['file_name'];
+                $config['create_thumb'] = FALSE;
+                $config['maintain_ratio'] = FALSE;
+                $config['quality'] = "100%";
+                $config['width'] = 1375;
+                $config['height'] = 768;
+                $dim = (intval($data["image_width"]) / intval($data["image_height"])) - ($config['width'] / $config['height']);
+                $config['master_dim'] = ($dim > 0) ? "height" : "width";
+                $this->load->library('image_lib');
+                $this->image_lib->initialize($config);
+                $this->image_lib->resize();
+                ///resize 3
+                $config = array();
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $data['full_path'];
                 $config['new_image'] = $data['file_path'] . "125x100_" . $data['file_name'];
                 $config['create_thumb'] = FALSE;
                 $config['maintain_ratio'] = FALSE;
@@ -829,6 +924,7 @@ class Member extends CI_Controller {
                         'src' => $info->url,
                         'thumb_src' => $upload_path_url . "125x100_" . $data['file_name'],
                         'bg_src' => $upload_path_url . "768x576_" . $data['file_name'],
+                        'slider_src' => $upload_path_url . "1375x768_" . $data['file_name'],
                         'id_user' => $this->session->userdata('user_id'),
                         'deleted' => 1,
                         'date' => date("Y-m-d H:i:s")

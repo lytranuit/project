@@ -89,7 +89,6 @@ class Index extends CI_Controller {
 //        echo "<pre>";
 //        print_r($this->data['arr_tin']);
 //        die();
-
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
         echo $this->blade->view()->make('page/page', $this->data)->render();
