@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-6">
             <label>Giá:</label>
-            <span class="text-danger">{{number_format($tin['gia'],0,'.'," ")}} triệu đồng</span>
+            <span class="text-danger">{{$tin['gia']}} VNĐ</span>
         </div>
         <div class="col-md-3">
             <label>Chiều dài:</label>

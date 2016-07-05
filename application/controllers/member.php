@@ -47,10 +47,8 @@ class Member extends CI_Controller {
         if (!$this->ion_auth->logged_in()) {
 //redirect them to the login page
             redirect("index/login", "refresh");
-        } else if ($this->has_right($method, $params)) {
-            $this->$method($params);
         } else {
-            show_404();
+            $this->$method($params);
         }
     }
 
@@ -80,7 +78,7 @@ class Member extends CI_Controller {
             "deactivate_tin",
             "remove_tin",
         );
-        if (in_array($method, $fun_admin)) {
+        if (in_array($method, $fun_tin)) {
             $id = $param[0];
             $id_user = $this->session->userdata('user_id');
             $this->load->model("tin_model");

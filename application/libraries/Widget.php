@@ -41,6 +41,19 @@ class Widget {
             $row['arr_hinhanh'] = $hinhanh;
             $row['author'] = $author[0]['username'];
             $row['khuvuc'] = $khuvuc[0]['ten_khuvuc'];
+            if ($row['gia'] != 0) {
+                if ($row['gia'] < 1000) {
+                    $row['gia'] = $row['gia'] . " triệu";
+                } else {
+                    if ($row['gia'] % 1000) {
+                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',') . " tỉ";
+                    } else {
+                        $row['gia'] = number_format($row['gia'] / 1000) . " tỉ";
+                    }
+                }
+            } else {
+                $row['gia'] = "Thương lượng";
+            }
         }
         echo $this->blade->view()->make('widget/tin-related', $this->data)->render();
     }
@@ -64,6 +77,19 @@ class Widget {
             $row['arr_hinhanh'] = $hinhanh;
             $row['author'] = $author[0]['username'];
             $row['khuvuc'] = $khuvuc[0]['ten_khuvuc'];
+            if ($row['gia'] != 0) {
+                if ($row['gia'] < 1000) {
+                    $row['gia'] = $row['gia'] . " triệu";
+                } else {
+                    if ($row['gia'] % 1000) {
+                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',') . " tỉ";
+                    } else {
+                        $row['gia'] = number_format($row['gia'] / 1000) . " tỉ";
+                    }
+                }
+            } else {
+                $row['gia'] = "Thương lượng";
+            }
         }
         echo $this->blade->view()->make('widget/tin-related', $this->data)->render();
     }
@@ -90,7 +116,6 @@ class Widget {
             }
             $author = $this->CI->user_model->where(array('id' => $row['id_user']))->as_array()->get_all();
             $row['hinhanh'] = $hinhanh[0]['thumb_src'];
-
             $row['author'] = $author[0]['username'];
         }
         echo $this->blade->view()->make('widget/tintuc', $this->data)->render();

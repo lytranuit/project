@@ -190,6 +190,19 @@ class Index extends CI_Controller {
         $tin[0]['phaply'] = $phaply[0]['ten_phaply'];
         $tin[0]['huong'] = $huong[0]['ten_huong'];
         $tin[0]['arr_hinhanh'] = $arr_hinhanh;
+        if ($tin[0]['gia'] != 0) {
+            if ($tin[0]['gia'] < 1000) {
+                $tin[0]['gia'] = $tin[0]['gia'] . " triệu";
+            } else {
+                if ($tin[0]['gia'] % 1000) {
+                    $tin[0]['gia'] = number_format($tin[0]['gia'] / 1000, 2, ',') . " tỉ";
+                } else {
+                    $tin[0]['gia'] = number_format($tin[0]['gia'] / 1000) . " tỉ";
+                }
+            }
+        } else {
+            $tin[0]['gia'] = "Thương lượng";
+        }
         $this->data['tin'] = $tin[0];
 //        echo "<pre>";
 //        print_r($tin);

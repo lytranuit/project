@@ -24,7 +24,7 @@
                 </div>
             </div><!--/.media -->
             <div class="row">
-                <p class="col-xs-12 text-center tin-gia" style="">Giá : {{number_format($row['gia'])}} triệu VND</p>
+                <p class="col-xs-12 text-center tin-gia" style="">Giá : {{$row['gia']}} VNĐ</p>
             </div>
         </div>
 
