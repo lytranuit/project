@@ -160,8 +160,10 @@ class Member extends CI_Controller {
                     $this->hinhanh_model->update(array('deleted' => 0), $arr_idhinhanh[$key]);
                 }
             }
-            foreach ($arr_deleted as $id) {
-                $this->slider_model->update(array("deleted" => 1), $id);
+            if (count($arr_deleted)) {
+                foreach ($arr_deleted as $id) {
+                    $this->slider_model->update(array("deleted" => 1), $id);
+                }
             }
             header('Location: ' . $_SERVER['HTTP_REFERER']);
             exit;
@@ -880,12 +882,12 @@ class Member extends CI_Controller {
                 $config = array();
                 $config['image_library'] = 'gd2';
                 $config['source_image'] = $data['full_path'];
-                $config['new_image'] = $data['file_path'] . "1375x768_" . $data['file_name'];
+                $config['new_image'] = $data['file_path'] . "1375x520_" . $data['file_name'];
                 $config['create_thumb'] = FALSE;
                 $config['maintain_ratio'] = FALSE;
                 $config['quality'] = "100%";
                 $config['width'] = 1375;
-                $config['height'] = 768;
+                $config['height'] = 520;
                 $dim = (intval($data["image_width"]) / intval($data["image_height"])) - ($config['width'] / $config['height']);
                 $config['master_dim'] = ($dim > 0) ? "height" : "width";
                 $this->load->library('image_lib');
@@ -924,7 +926,7 @@ class Member extends CI_Controller {
                         'src' => $info->url,
                         'thumb_src' => $upload_path_url . "125x100_" . $data['file_name'],
                         'bg_src' => $upload_path_url . "768x576_" . $data['file_name'],
-                        'slider_src' => $upload_path_url . "1375x768_" . $data['file_name'],
+                        'slider_src' => $upload_path_url . "1375x520_" . $data['file_name'],
                         'id_user' => $this->session->userdata('user_id'),
                         'deleted' => 1,
                         'date' => date("Y-m-d H:i:s")

@@ -12,7 +12,10 @@
         <div class="carousel-inner">
             @foreach($arr_slider as $key => $slider)
             @if($key)
-            <div class="item" style="background-image: url({{base_url(). $slider['hinhanh']}})">
+            <div class="item" style="background-image: url({{base_url(). $slider['hinhanh']}});background-size: cover;
+                 background-repeat: no-repeat;
+                 background-position: center center;
+                 background-color: #D4D4D4;">
                 <div class="container">
                     <div class="row slide-margin">
                         <div class="col-sm-6">
@@ -26,7 +29,10 @@
                 </div>
             </div><!--/.item-->
             @else
-            <div class="item active" style="background-image: url({{base_url(). $slider['hinhanh']}})">
+            <div class="item active" style="background-image: url({{base_url(). $slider['hinhanh']}});background-size: cover;
+                 background-repeat: no-repeat;
+                 background-position: center center;
+                 background-color: #D4D4D4;">
                 <div class="container">
                     <div class="row slide-margin">
                         <div class="col-sm-6">

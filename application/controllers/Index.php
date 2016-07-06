@@ -98,6 +98,7 @@ class Index extends CI_Controller {
         $this->load->model("option_model");
         $gioithieu = $this->option_model->where(array("name" => 'gioi-thieu'))->as_array()->get_all();
         $this->data['gioithieu'] = $gioithieu[0];
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
         echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
