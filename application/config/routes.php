@@ -51,5 +51,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   |		my-controller/my-method	-> my_controller/my_method
  */
 $route['default_controller'] = 'index';
+
+
+//$route['^phong-cho-thue.html$'] = 'user/phong';
+//$route['^he-thong-nha.html$'] = 'user/nha';
+//$route['^tin-tuc.html$'] = 'user/tintuc';
+//$route['^ki-gui-nha-dat.html$'] = 'user/kigui';
+//$route['^phong-cho-thue/(.*)-p(:num).html$'] = 'user/infophong/$2';
+//$route['^he-thong-nha/(.*)-n(:num).html$'] = 'user/infonha/$2';
+//$route['^tin-tuc/(.*)-t(:num).html$'] = 'user/infotintuc/$2';
+
 $route['404_override'] = 'index/page_404';
 $route['translate_uri_dashes'] = FALSE;

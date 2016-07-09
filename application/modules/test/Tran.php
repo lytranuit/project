@@ -1,6 +1,6 @@
 <?php
 
-class Index extends MY_Controller {
+class Tran extends MY_Controller {
 
     function __construct() {
         parent::__construct();
@@ -41,12 +41,11 @@ class Index extends MY_Controller {
 
     public function listall() {
         //echo __DIR__;
-        $dirmodule = APPPATH . 'modules/';
-        $dir = APPPATH . 'controllers/';
+        $dir = APPPATH . 'modules/';
         $this->load->library('directoryinfo');
-        $sortedarray1 = $this->directoryinfo->readDirectory($dir, true);
-        $sortedarray2 = $this->directoryinfo->readDirectory($dirmodule, true);
-        $arr = array_merge(array($sortedarray1), $sortedarray2);
+        $sortedarray = $this->directoryinfo->readDirectory($dir, true);
+        echo "<pre>";
+        print_r($sortedarray);
     }
 
     public function page_404() {
@@ -58,44 +57,12 @@ class Index extends MY_Controller {
         $this->data['template'] = "box";
         $arr_page = $this->page_model->where(array("deleted" => 0))->as_array()->get_all();
         $this->data['arr_page'] = $arr_page;
-        $dirmodule = APPPATH . 'modules/';
-        $dir = APPPATH . 'controllers/';
-        $this->load->library('directoryinfo');
-        $sortedarray1 = $this->directoryinfo->readDirectory($dir, true);
-        $sortedarray2 = $this->directoryinfo->readDirectory($dirmodule, true);
-        $arr = array_merge(array($sortedarray1), $sortedarray2);
-//        echo "<pre>";
-//        print_r($arr);
-//        die();
-        $dataselect = array();
-        $data = "";
-        foreach ($arr as $key => $row) {
-            $module = mb_strtolower($key, 'UTF-8');
-            foreach ($row as $key1 => $row1) {
-                $class = mb_strtolower($key1, 'UTF-8');
-                foreach ($row1 as $row2) {
-                    $method = mb_strtolower($row2, 'UTF-8');
-                    if ($module) {
-                        $page = $module . "/" . $class . "/" . $method;
-                    } else {
-                        $page = $class . "/" . $method;
-                    }
-                    $dataselect[$page] = $page;
-                    $data .= "{value:'$page',text:'$page'},";
-                }
-            }
-        }
-        $this->data['link'] = $data;
+
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
-        array_push($this->data['stylesheet_tag'], base_url() . "public/css/typeahead.js-bootstrap.css");
-
         array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/typeahead.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/typeaheadjs.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/combobox.js");
         echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 

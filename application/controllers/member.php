@@ -1,26 +1,15 @@
 <?php
 
-use Philo\Blade\Blade;
-
-class Member extends CI_Controller {
-
-    private $data = array();
+class Member extends MY_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->library(array('ion_auth', 'form_validation', 'widget'));
-        $this->load->helper(array('url', 'language', 'alias'));
-        $this->lang->load('auth');
         ////////////////////////////////
         $module = $this->router->fetch_module();
-        $views = APPPATH . "views/";
-        $cache = APPPATH . "cache/";
-        $this->blade = new Blade($views, $cache);
         ////////////
         $this->data['is_login'] = $this->ion_auth->logged_in();
         $this->data['is_admin'] = $this->ion_auth->is_admin();
         $this->data['func'] = $this->router->fetch_method();
-        $this->data['widget'] = $this->widget;
         ////////////////////////////////// Stle mac dinh
         $this->data['stylesheet_tag'] = array(
             base_url() . "public/css/bootstrap.min.css",
@@ -39,20 +28,6 @@ class Member extends CI_Controller {
             base_url() . "public/js/main.js",
             base_url() . "public/js/wow.min.js",
         );
-        $module = $this->router->fetch_module();
-        $class = $this->router->fetch_class(); // class = controller
-        $method = $this->router->fetch_method();
-        $this->load->model("page_model");
-        $page = $this->page_model->where(array("deleted" => 0, "module" => $module, "controller" => $class, "method" => $method))->as_array()->get_all();
-        if (count($page)) {
-            $this->data['content'] = $method;
-            $this->data['template'] = $page[0]['template'];
-            $this->data['title'] = $page[0]['page'];
-        } else { //////// Default
-            $this->data['content'] = $method;
-            $this->data['template'] = "left";
-            $this->data['title'] = "";
-        }
     }
 
     public function _remap($method, $params = array()) {
