@@ -2,25 +2,30 @@
 
 use Philo\Blade\Blade;
 
-class Ajax extends CI_Controller {
-
-    private $data = array();
+class Ajax extends MY_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->library(array('ion_auth', 'form_validation', 'widget'));
-        $this->load->helper(array('url', 'language'));
-        $this->lang->load('auth');
-        $this->load->model("page_model");
-////////////////////////////////
-        $views = APPPATH . "views/";
-        $cache = APPPATH . "cache/";
-        $this->blade = new Blade($views, $cache);
     }
 
     function loadslider() {
         $this->data['id'] = "new" . rand();
         echo $this->blade->view()->make('ajax/ajaxslider', $this->data)->render();
+    }
+
+    function editpage() {
+        $id = $this->input->get('id');
+        $link = $this->input->get('link');
+        $seo = $this->input->get('seo');
+        $template = $this->input->get('template');
+        $page = $this->input->get('page');
+        $array = array(
+            'seo_url' => $seo,
+            'template' => $template,
+            'link' => $link,
+            'page' => $page
+        );
+        $this->page_model->update($array, $id);
     }
 
 ////////////
