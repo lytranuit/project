@@ -57,18 +57,22 @@ class Index extends MY_Controller {
         //phpinfo();die();
         $this->data['template'] = "box";
         $arr_page = $this->page_model->where(array("deleted" => 0))->as_array()->get_all();
+        $page_ava = array_map(function($item) {
+            return $item['link'];
+        }, $arr_page);
+
         $this->data['arr_page'] = $arr_page;
-        $dirmodule = APPPATH . 'modules/';
+        //$dirmodule = APPPATH . 'modules/';
         $dir = APPPATH . 'controllers/';
         $this->load->library('directoryinfo');
-        $sortedarray1 = $this->directoryinfo->readDirectory($dir, true);
-        $sortedarray2 = $this->directoryinfo->readDirectory($dirmodule, true);
-        $arr = array_merge(array($sortedarray1), $sortedarray2);
+        $arr = $this->directoryinfo->readDirectory($dir, array("Auth.php", "Ajax.php"));
+        $arr = array($arr);
+        // $sortedarray2 = $this->directoryinfo->readDirectory($dirmodule, true);
+        // $arr = array_merge(array($sortedarray1), $sortedarray2);
 //        echo "<pre>";
 //        print_r($arr);
 //        die();
         $dataselect = array();
-        $data = "";
         foreach ($arr as $key => $row) {
             $module = mb_strtolower($key, 'UTF-8');
             foreach ($row as $key1 => $row1) {
@@ -81,22 +85,30 @@ class Index extends MY_Controller {
                         $page = $class . "/" . $method;
                     }
                     $dataselect[$page] = $page;
-                    $data .= "{value:'$page',text:'$page'},";
                 }
             }
         }
-        $this->data['link'] = $data;
+        $this->data['page_ava'] = $page_ava;
+        $this->data['link'] = $dataselect;
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
-        array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
-        array_push($this->data['stylesheet_tag'], base_url() . "public/css/typeahead.js-bootstrap.css");
-
-        array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
+//        array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
+//        array_push($this->data['stylesheet_tag'], base_url() . "public/css/typeahead.js-bootstrap.css");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/typeahead.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/typeaheadjs.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/combobox.js");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/typeahead.js");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/typeaheadjs.js");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/combobox.js");
         echo $this->blade->view()->make('page/page', $this->data)->render();
+    }
+
+    public function delete_img() {
+        $this->load->model("hinhanh_model");
+        $hinh = $this->hinhanh_model->hinhanh_sudung();
+        $this->hinhanh_model->delete_img_not($hinh[0]['id']);
+        echo "<pre>";
+        print_r($hinh);
+        die();
     }
 
     public function index() {
@@ -184,7 +196,7 @@ class Index extends MY_Controller {
         } else {
             $this->data['message'] = $this->session->flashdata('message');
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
-            echo $this->blade->view()->make('page/signin-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -225,7 +237,7 @@ class Index extends MY_Controller {
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.jcarousel.min.js");
-        echo $this->blade->view()->make('page/tin-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     function searchtin() {
@@ -259,7 +271,7 @@ class Index extends MY_Controller {
 //        die();
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/owl.theme.css");
-        echo $this->blade->view()->make('page/searchtin-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     public function tintuc($param) {
@@ -280,7 +292,7 @@ class Index extends MY_Controller {
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/flexslider.css");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.flexslider.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.jcarousel.min.js");
-        echo $this->blade->view()->make('page/tintuc-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     function searchtintuc() {
@@ -297,7 +309,7 @@ class Index extends MY_Controller {
 //        print_r($this->data['arr_tin']);
 //        die();
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
-        echo $this->blade->view()->make('page/searchtintuc-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     // log the user out

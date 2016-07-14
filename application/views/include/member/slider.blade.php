@@ -5,7 +5,10 @@
     @foreach($arr_slider as $slider)
     <div class="col-md-12 alert box-{{$slider['id']}}">
         <a href="#" class="close delete-slider" data-id="{{$slider['id']}}" data-dismiss="alert" aria-label="close" title="close">×</a>
-        <h2>Slider</h2>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <h2 class="col-md-1 col-xs-1 col-sm-1 col-lg-1" style="margin: 8px 0px 20px;">Slider</h2>
+            <div class="col-md-1 col-xs-1 col-sm-1 col-lg-1" ><input class="form-control" name="order[]" required="" value="{{$slider['order']}}"/></div>
+        </div>
         <div class="col-md-12">
             <div class="form-group">
                 <input id="hinh-anh{{$slider['id']}}" name="hinhanh[]" type="file" multiple class="file">
@@ -15,19 +18,19 @@
             <label for="text1">
                 Text1:
             </label><span class="error-place"></span>
-            <input type="text" name="text1[]" value="{{$slider['animate_1']}}" class="form-control" placeholder="Text1"/>
+            <textarea name="text1[]" value="" class="form-control edit">{{$slider['animate_1']}}</textarea>
         </div>
         <div class="form-group col-md-4 parent">
             <label for="text2">
                 Text2:
             </label><span class="text-danger">*</span><span class="error-place"></span>
-            <input type="text" name="text2[]" value="{{$slider['animate_2']}}" class="form-control" placeholder="Text2"/>
+            <textarea name="text2[]" value="" class="form-control edit">{{$slider['animate_2']}}</textarea>
         </div>
         <div class="form-group col-md-4 parent">
             <label for="text3">
                 Text3:
             </label><span class="text-danger">*</span><span class="error-place"></span>
-            <input type="text" name="text3[]" value="{{$slider['animate_3']}}" class="form-control" placeholder="Text3"/>
+            <textarea name="text3[]" value="" class="form-control edit">{{$slider['animate_3']}}</textarea>
         </div>
         <input type="hidden" name="id[]" value="{{$slider['id']}}"/>
         <input type='hidden' name='id_hinhanh[]' value='{{$slider['id_hinhanh']}}' class='hinhanh'>
@@ -65,6 +68,9 @@
 </form>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.edit').froalaEditor({
+            toolbarButtons: ['color'],
+        })
         $(".themslider").click(function () {
             $.ajax({
                 type: 'GET',

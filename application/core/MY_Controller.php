@@ -25,11 +25,11 @@ class MY_Controller extends CI_Controller {
         $link = $module == "" ? $class . "/" . $method : $module . "/" . $class . "/" . $method;
         $page = $this->page_model->where(array("deleted" => 0, 'link' => $link))->as_array()->get_all();
         if (count($page)) {
-            $this->data['content'] = $method;
+            $this->data['content'] = $class . "." . $method;
             $this->data['template'] = $page[0]['template'];
             $this->data['title'] = $page[0]['page'];
         } else { //////// Default
-            $this->data['content'] = $method;
+            $this->data['content'] = $class . "." . $method;
             $this->data['template'] = "left";
             $this->data['title'] = "";
         }

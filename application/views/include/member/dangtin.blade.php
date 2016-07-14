@@ -15,7 +15,7 @@
             <label for="post_contents">
                 Nội dung 
             </label><span class="text-danger">*</span><span class="error-place"></span>
-            <textarea name="post_contents" class="form-control" id="edit"required=""></textarea>
+            <textarea name="post_contents" class="form-control" id="edit" required=""></textarea>
         </div>
         <div class="form-group col-md-6 parent">
             <label>

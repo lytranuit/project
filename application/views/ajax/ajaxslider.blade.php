@@ -1,7 +1,10 @@
 
 <div class="col-md-12 alert box-{{$id}}">
     <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-    <h2>Slider</h2>
+    <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+        <h2 class="col-md-1 col-xs-1 col-sm-1 col-lg-1" style="margin: 8px 0px 20px;">Slider</h2>
+        <div class="col-md-1 col-xs-1 col-sm-1 col-lg-1" ><input class="form-control" name="order[]" required=""/></div>
+    </div>
     <div class="col-md-12">
         <div class="form-group">
             <input id="hinh-anh{{$id}}" name="hinhanh[]" type="file" multiple class="file">
@@ -11,19 +14,19 @@
         <label for="text1">
             Text1:
         </label><span class="text-danger">*</span><span class="error-place"></span>
-        <input type="text" name="text1[]" value="" class="form-control" placeholder="Text1"/>
+        <textarea name="text1[]" value="" class="form-control edit"></textarea>
     </div>
     <div class="form-group col-md-4 parent">
         <label for="text2">
             Text2:
         </label><span class="text-danger">*</span><span class="error-place"></span>
-        <input type="text" name="text2[]" value="" class="form-control" placeholder="Text2"/>
+        <textarea name="text2[]" value="" class="form-control edit"></textarea>
     </div>
     <div class="form-group col-md-4 parent">
         <label for="text3">
             Text3:
         </label><span class="text-danger">*</span><span class="error-place"></span>
-        <input type="text" name="text3[]" value="" class="form-control" placeholder="Text3"/>
+        <textarea name="text3[]" value="" class="form-control edit"></textarea>
     </div>
     <input type="hidden" name="id[]" value="{{$id}}"/>
     <script type="text/javascript">
@@ -43,5 +46,9 @@
         $('#hinh-anh{{$id}}').on('filedeleted', function (event, key) {
             $(".hinhanh[value='" + key + "'").remove();
         });
+
+        $('.edit').froalaEditor({
+            toolbarButtons: ['color'],
+        })
     </script>
 </div>

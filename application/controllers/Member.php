@@ -99,7 +99,8 @@ class Member extends MY_Controller {
             $user = $this->user_model->where(array('id' => $id_user))->as_array()->get_all();
             $this->data['user'] = $user[0];
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
-            echo $this->blade->view()->make('page/thongtin-page', $this->data)->render();
+            //echo $this->data['content'];
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -114,13 +115,15 @@ class Member extends MY_Controller {
             $arr_text2 = $this->input->post('text2');
             $arr_text3 = $this->input->post('text3');
             $arr_deleted = $this->input->post('id_deleted');
+            $arr_order = $this->input->post('order');
             foreach ($arr_id as $key => $id) {
                 if (is_numeric($id)) { /////// update
                     $additional_data = array(
                         'id_hinhanh' => $arr_idhinhanh[$key],
                         'animate_1' => $arr_text1[$key],
                         'animate_2' => $arr_text2[$key],
-                        'animate_3' => $arr_text3[$key]
+                        'animate_3' => $arr_text3[$key],
+                        'order' => $arr_order[$key]
                     );
                     $this->slider_model->update($additional_data, $id);
                     $this->hinhanh_model->update(array('deleted' => 0), $arr_idhinhanh[$key]);
@@ -129,7 +132,8 @@ class Member extends MY_Controller {
                         'id_hinhanh' => $arr_idhinhanh[$key],
                         'animate_1' => $arr_text1[$key],
                         'animate_2' => $arr_text2[$key],
-                        'animate_3' => $arr_text3[$key]
+                        'animate_3' => $arr_text3[$key],
+                        'order' => $arr_order[$key]
                     );
                     $this->slider_model->insert($additional_data);
                     $this->hinhanh_model->update(array('deleted' => 0), $arr_idhinhanh[$key]);
@@ -145,7 +149,7 @@ class Member extends MY_Controller {
         } else {
             $this->load->model("slider_model");
             $this->load->model("hinhanh_model");
-            $arr_slider = $this->slider_model->where(array('deleted' => 0))->as_array()->get_all();
+            $arr_slider = $this->slider_model->where(array('deleted' => 0))->order_by("order")->as_array()->get_all();
             foreach ($arr_slider as &$slider) {
                 $hinh = $this->hinhanh_model->where(array('id_hinhanh' => $slider['id_hinhanh']))->as_array()->get_all();
                 $html = "\"<img src='" . base_url() . $hinh[0]['thumb_src'] . "' class='file-preview-image' alt='" . $hinh[0]['ten_hinhanh'] . "' title='" . $hinh[0]['ten_hinhanh'] . "'>\",";
@@ -160,8 +164,13 @@ class Member extends MY_Controller {
             }
             $this->data['arr_slider'] = $arr_slider;
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/fileinput.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
+            array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/colors.css");
 
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
+            array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/colors.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
             echo $this->blade->view()->make('page/page', $this->data)->render();
         }
@@ -189,7 +198,7 @@ class Member extends MY_Controller {
         array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
-        echo $this->blade->view()->make('page/quanlyuser-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     function change_group($params) {
@@ -202,7 +211,7 @@ class Member extends MY_Controller {
         }
     }
 
-    function change_pass() {
+    function changepass() {
         $id_user = $this->session->userdata('user_id');
         if (isset($_POST['change_pass'])) {
             $this->ion_auth->change_password($this->session->userdata('identity'), $this->input->post('passwordold'), $this->input->post('password'));
@@ -213,7 +222,7 @@ class Member extends MY_Controller {
             $this->data['id_user'] = $id_user;
             $this->data['success'] = $this->session->flashdata('success');
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
-            echo $this->blade->view()->make('page/change-pass-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -222,6 +231,8 @@ class Member extends MY_Controller {
         $id = $params[0];
         $this->load->model("user_model");
         $this->user_model->update(array("deleted" => 1), $id);
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
     // activate the user
@@ -267,7 +278,7 @@ class Member extends MY_Controller {
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
-        echo $this->blade->view()->make('page/quanlytin-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     public function dangtin() { ////////// Trang dang tin
@@ -322,7 +333,6 @@ class Member extends MY_Controller {
 
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
-            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
             /////////// Plugin
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
@@ -341,8 +351,6 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
             ///////// Editor
             array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
             /////////// Plugin
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
@@ -362,7 +370,7 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
-            echo $this->blade->view()->make('page/dangtin-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -433,7 +441,6 @@ class Member extends MY_Controller {
 
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
-            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
             /////////// Plugin
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
@@ -451,8 +458,6 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
             ///////// Editor
             array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
             /////////// Plugin
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
@@ -472,7 +477,7 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
-            echo $this->blade->view()->make('page/edittin-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -517,7 +522,7 @@ class Member extends MY_Controller {
         array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
         array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
         array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
-        echo $this->blade->view()->make('page/quanlytintuc-page', $this->data)->render();
+        echo $this->blade->view()->make('page/page', $this->data)->render();
     }
 
     public function dangtintuc() { ////////// Trang dang tin
@@ -549,7 +554,6 @@ class Member extends MY_Controller {
 
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
-            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
             /////////// Plugin
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
@@ -567,8 +571,6 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
             ///////// Editor
             array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
             /////////// Plugin
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
@@ -588,7 +590,7 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
-            echo $this->blade->view()->make('page/dangtintuc-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -631,7 +633,6 @@ class Member extends MY_Controller {
 
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
-            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
             /////////// Plugin
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
@@ -649,8 +650,6 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/fileinput.js");
             ///////// Editor
             array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
             /////////// Plugin
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
@@ -670,7 +669,7 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/url.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/video.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
-            echo $this->blade->view()->make('page/edittintuc-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         }
     }
 
@@ -723,7 +722,6 @@ class Member extends MY_Controller {
         if (!isset($_POST['dangtin'])) {
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_editor.min.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/froala_style.min.css");
-            array_push($this->data['stylesheet_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css");
             /////////// Plugin
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/char_counter.css");
             array_push($this->data['stylesheet_tag'], base_url() . "public/css/plugins/code_view.css");
@@ -740,8 +738,6 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.validate.js");
             ///////// Editor
             array_push($this->data['javascript_tag'], base_url() . "public/js/froala_editor.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js");
-            array_push($this->data['javascript_tag'], "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js");
             /////////// Plugin
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/align.min.js");
             array_push($this->data['javascript_tag'], base_url() . "public/js/plugins/char_counter.min.js");
@@ -763,7 +759,7 @@ class Member extends MY_Controller {
             array_push($this->data['javascript_tag'], base_url() . "public/js/languages/en_gb.js");
             $gioithieu = $this->option_model->where(array("name" => 'gioi-thieu'))->as_array()->get_all();
             $this->data['gioithieu'] = $gioithieu[0];
-            echo $this->blade->view()->make('page/editgioithieu-page', $this->data)->render();
+            echo $this->blade->view()->make('page/page', $this->data)->render();
         } else {
             $content = $this->input->post("post_contents");
             $id = $this->input->post("id");

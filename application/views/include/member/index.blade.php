@@ -41,7 +41,7 @@
             <input type="number" name="dienthoai" class="form-control" placeholder="VD:01224545275" value="{{$user['phone']}}"/>
         </div>
         <div class="col-md-12">
-            <a class="" href="{{base_url()}}member/change_pass"> <i class="glyphicon glyphicon-lock"></i> Thay đổi mật khẩu</a>
+            <a class="" href="{{base_url()}}member/changepass"> <i class="glyphicon glyphicon-lock"></i> Thay đổi mật khẩu</a>
         </div>
         <div class="col-md-12 text-center">
             <button type="submit" name="edit_user" class="btn btn-primary">Thay đổi</button>

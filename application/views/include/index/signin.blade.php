@@ -1,9 +1,3 @@
-@extends("layouts.box")
-
-@section("title")
-Trang Đăng ký
-@stop
-@section("content")
 <div id="signinbox" class="mainbox col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2"> 
     <form name="form" id="form-signin" action="{{base_url()}}index/signin" class=""method="POST">
         <h2 class='text-center text-success'>
@@ -111,4 +105,3 @@ Trang Đăng ký
         /* ENd dang tin */
     });
 </script>
-@stop

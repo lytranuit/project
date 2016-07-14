@@ -2,7 +2,7 @@
 
 class Directoryinfo {
 
-    public function readDirectory($Directory, $Recursive = true, $level = 0) {
+    public function readDirectory($Directory, $exclude = array(), $Recursive = true, $level = 0) {
         if (is_dir($Directory) === false) {
             return false;
         }
@@ -10,9 +10,9 @@ class Directoryinfo {
         try {
             $Resource = opendir($Directory);
             $Found = array();
-
+            $exclude = array_merge($exclude, array(".", "..", ".DS_Store"));
             while (false !== ($Item = readdir($Resource))) {
-                if ($Item == "." || $Item == ".." || $Item == ".DS_Store") {
+                if (in_array($Item, $exclude)) {
                     continue;
                 }
                 if ($Recursive === true && is_dir($Directory . $Item)) {

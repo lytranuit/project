@@ -20,8 +20,9 @@
                     <div class="row slide-margin">
                         <div class="col-sm-6">
                             <div class="carousel-content">
-                                <h1 class="animation animated-item-1">{{$slider['animate_1']}}</h1>
-                                <h2 class="animation animated-item-2">{{$slider['animate_2']}}</h2>
+                                <h1 class="animation animated-item-1"><?= $slider['animate_1'] ?></h1>
+                                <h2 class="animation animated-item-2"><?= $slider['animate_2'] ?></h2>
+                                <h2 class="animation animated-item-3"><?= $slider['animate_3'] ?></h2>
                                 <!--                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>-->
                             </div>
                         </div>
@@ -37,8 +38,9 @@
                     <div class="row slide-margin">
                         <div class="col-sm-6">
                             <div class="carousel-content">
-                                <h1 class="animation animated-item-1">{{$slider['animate_1']}}</h1>
-                                <h2 class="animation animated-item-2">{{$slider['animate_2']}}</h2>
+                                <h1 class="animation animated-item-1"><?= $slider['animate_1'] ?></h1>
+                                <h2 class="animation animated-item-2"><?= $slider['animate_2'] ?></h2>
+                                <h2 class="animation animated-item-3"><?= $slider['animate_3'] ?></h2>
                                 <!--                                <a class="btn-slide animation animated-item-3" href="#">Read More</a>-->
                             </div>
                         </div>

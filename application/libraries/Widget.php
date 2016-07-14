@@ -144,7 +144,7 @@ class Widget {
     function sliderhome() {
         $this->CI->load->model("slider_model");
         $this->CI->load->model("hinhanh_model");
-        $arr_slider = $this->CI->slider_model->where(array('deleted' => 0))->as_array()->get_all();
+        $arr_slider = $this->CI->slider_model->where(array('deleted' => 0))->order_by('order')->as_array()->get_all();
         foreach ($arr_slider as &$slider) {
             $hinh = $this->CI->hinhanh_model->where(array('id_hinhanh' => $slider['id_hinhanh']))->as_array()->get_all();
             $slider['hinhanh'] = $hinh[0]['slider_src'];
