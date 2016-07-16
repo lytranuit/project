@@ -5,7 +5,7 @@
     </div>
     <div class="row">
         @foreach($arr_tin as $tin)
-        <div class="blog-item col-md-12" data-url='{{base_url() . "index/tintuc/" . $tin['id_tintuc']}}'>
+        <div class="blog-item col-md-12" data-url='{{get_url_seo("index/tintuc",array($tin['id_tintuc'],sluggable($tin['title'])))}}'>
             <!--            @if(count($tin['arr_hinhanh']))
                         <img class=" img-blog" src="{{base_url() . $tin['arr_hinhanh'][0]['bg_src']}}" width="100%" height="300" alt="" />
                         @endif-->
@@ -21,7 +21,7 @@
                     <div class="fr-view">
                         {{substr(strip_tags($tin['content']),0,500) . "..."}}
                     </div>
-                    <div style="margin-top:10px;"><a class="btn btn-primary readmore" href="' + url + '">Read More <i class="fa fa-angle-right"></i></a></div>
+                    <div style="margin-top:10px;"><a class="btn btn-primary readmore" href="{{get_url_seo("index/tintuc",array($tin['id_tintuc'],sluggable($tin['title'])))}}">Read More <i class="fa fa-angle-right"></i></a></div>
                 </div>
             </div>
         </div><!--/.blog-item-->

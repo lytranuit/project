@@ -8,7 +8,7 @@
                     <h3 class="no-margin" style="font-weight: 600;color: black;">{{$tin['title']}}</h3>
                     <p class="content">{{substr(strip_tags($tin['content']),0,200) . "..."}}</p>
                     <p>
-                        <a class="btn btn-danger" href="{{base_url() . "index/tintuc/" .$tin['id_tintuc']}}">Read More</a>
+                        <a class="btn btn-danger" href="{{get_url_seo("index/tintuc",array($tin['id_tintuc'],sluggable($tin['title'])))}}">Read More</a>
                     </p>
                 </div>
             </div>

@@ -9,7 +9,6 @@ class MY_Controller extends CI_Controller {
     function __construct() {
         parent::__construct();
         $this->load->library(array('ion_auth', 'form_validation', 'widget'));
-        $this->load->helper(array('url', 'language'));
         $this->lang->load('auth');
         $this->load->model("page_model");
         //////

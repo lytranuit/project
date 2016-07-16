@@ -76,6 +76,11 @@ class Ajax extends MY_Controller {
                 }
             }
         }
+        $arr_page = $this->page_model->where(array("deleted" => 0))->as_array()->get_all();
+        $page_ava = array_map(function($item) {
+            return $item['link'];
+        }, $arr_page);
+        $this->data['page_ava'] = $page_ava;
         $this->data['link'] = $dataselect;
         echo $this->blade->view()->make('ajax/ajaxpage', $this->data)->render();
     }

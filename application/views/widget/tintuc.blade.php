@@ -9,7 +9,7 @@
                         <img src="{{base_url() . $tin['hinhanh']}}" alt="{{$tin['title']}}"  />
                     </div>
                     <div class="media-body">
-                        <a href="{{base_url()}}index/tintuc/{{$tin['id_tintuc']}}"style="color: #464646;
+                        <a href="{{get_url_seo("index/tintuc",array($tin['id_tintuc'],sluggable($tin['title'])))}}"style="color: #464646;
                            font-weight: 600;">{{$tin['title']}}</a>
                         <div class="entry-meta small muted">
                             <span>By <a href="#">{{$tin['author']}}</a></span> <span class="glyphicon glyphicon-time"></span><span><a href="#" class="tin-date">{{$tin['date']}}</a></span>

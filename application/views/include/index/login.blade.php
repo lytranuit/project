@@ -4,7 +4,7 @@
             <div class="panel-title text-center">Đăng nhập</div>
         </div>     
         <div class="panel-body" >
-            <form name="form" id="form" action="{{base_url()}}index/login" class="form-horizontal"method="POST">
+            <form name="form" id="form" action="{{get_url_seo("index/login")}}" class="form-horizontal"method="POST">
                 @if($message != '')
                 <div class="alert alert-danger">
                     <a class="close" data-dismiss="alert" href="#">×</a>{{$message}}
@@ -34,7 +34,7 @@
                     <div class="col-sm-12">
                         <div style="font-size:85%">
                             Bạn chưa có account? 
-                            <a href="{{base_url()}}dang-ky">
+                            <a href="{{get_url_seo("index/signin")}}">
                                 Đăng ký ở đây
                             </a>
                         </div>

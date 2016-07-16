@@ -15,7 +15,7 @@
                 </div>
                 <div class="media-body">
                     <div class="row">
-                        <a href="{{base_url() . "index/tin/" .$row['id_tin']}}">
+                        <a href="{{get_url_seo("index/tin",array($row['id_tin'],$row['alias']))}}">
                             <span class="tin-title col-xs-12">{{$row['title']}}</span>
                         </a>
                         <span class="tin-dientich col-xs-12" style="color: gray;">Diện tích : {{number_format($row['dientich'])}} m2</span>

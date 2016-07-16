@@ -9,7 +9,7 @@ class Widget {
 
     function __construct() {
         $this->CI = &get_instance();
-        $this->CI->load->helper(array('url', 'language'));
+        $this->CI->load->helper(array('url', 'language', 'my'));
         ////////////////////////////////
         $views = APPPATH . "views/";
         $cache = APPPATH . "cache/";
@@ -151,6 +151,13 @@ class Widget {
         }
         $this->data['arr_slider'] = $arr_slider;
         echo $this->blade->view()->make('widget/slider', $this->data)->render();
+    }
+
+    function profile_bar() {
+        $this->CI->load->library(array('ion_auth'));
+        $this->CI->lang->load('auth');
+        $this->data['is_admin'] = $this->CI->ion_auth->is_admin();
+        echo $this->blade->view()->make('widget/profile-bar', $this->data)->render();
     }
 
     function khuvuc() {

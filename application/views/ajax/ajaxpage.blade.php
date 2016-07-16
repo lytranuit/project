@@ -4,7 +4,11 @@
     <td>
         <select class="link form-control">
             @foreach($link as $row)
-            <option value="{{$row}}">{{$row}}</option>
+            @if(in_array($row,$page_ava))
+            <option value="{{$row}}" disabled="">{{$row}}</option>
+            @else
+            <option value="{{$row}}" style="color:black;">{{$row}}</option>
+            @endif
             @endforeach
         </select>
     </td>

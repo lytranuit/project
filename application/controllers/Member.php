@@ -8,7 +8,6 @@ class Member extends MY_Controller {
         $module = $this->router->fetch_module();
         ////////////
         $this->data['is_login'] = $this->ion_auth->logged_in();
-        $this->data['is_admin'] = $this->ion_auth->is_admin();
         $this->data['func'] = $this->router->fetch_method();
         ////////////////////////////////// Stle mac dinh
         $this->data['stylesheet_tag'] = array(

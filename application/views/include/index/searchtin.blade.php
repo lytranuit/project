@@ -17,7 +17,7 @@
                     @endforeach
                     <div class="jumbotron-overlay-down background-opacity"><span class="glyphicon glyphicon-zoom-in" style="font-size:1.5em;color:white;cursor: pointer;position: absolute;top: 45%;left: 45%;margin: 0;padding: 0;overflow: inherit;"></span></div>
                 </div>
-                <a href="{{base_url()."index/tin/".$tin['id_tin']}}"><p>{{$tin['title']}}</p></a>
+                <a href="{{get_url_seo("index/tin",array($tin['id_tin'],$tin['alias']))}}"><p>{{$tin['title']}}</p></a>
                 <span>{{strip_tags($tin['content'])}}</span>
                 <div class="address2">
                     <span class="glyphicon glyphicon-map-marker pull-left"></span>
