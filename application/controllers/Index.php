@@ -213,8 +213,8 @@ class Index extends MY_Controller {
         $arr_hinhanh = $this->tin_model->get_tin_hinhanh($tin[0]['id_tin']);
 
         $tin[0]['author'] = $author[0]['username'];
-        $tin[0]['phaply'] = $phaply[0]['ten_phaply'];
-        $tin[0]['huong'] = $huong[0]['ten_huong'];
+        $tin[0]['phaply'] = isset($phaply[0]['ten_phaply']) ? $phaply[0]['ten_phaply'] : "";
+        $tin[0]['huong'] = isset($huong[0]['ten_huong']) ? $huong[0]['ten_huong'] : "";
         $tin[0]['arr_hinhanh'] = $arr_hinhanh;
         if ($tin[0]['gia'] != 0) {
             if ($tin[0]['gia'] < 1000) {
@@ -355,6 +355,40 @@ class Index extends MY_Controller {
             echo json_encode(true);
         } else {
             echo json_encode(array("Password cũ không đúng!"));
+        }
+    }
+
+    public function crondata() {
+        include_once("public/dom/simple_html_dom.php");
+        $page = "http://alonhadat.com.vn/";
+        $html = file_get_html($page . 'nha-dat/can-ban/dat-tho-cu-dat-o/2/ho-chi-minh.html');
+        $first = $html->find(".content-item .ct_title a");
+        foreach ($first as $link) {
+            $href = $link->href;
+            $id = preg_replace('/(.*)-(.*).html*/', "$2", $href);
+            $htmldata = file_get_html($page . $href);
+            $title = $htmldata->find(".content .title h1", 0)->plaintext;
+            $content = $htmldata->find(".content .detail", 0)->innertext;
+            $dientich = $htmldata->find(".content .square .value", 0)->plaintext;
+            $gia = $htmldata->find(".content .price .value", 0)->plaintext;
+            $diachi = $htmldata->find(".content .contact .add .value", 0)->plaintext;
+            $data_up = array(
+                'title' => $title,
+                'alias' => sluggable($title),
+                'content' => $content,
+                'id_khuvuc' => 2,
+                'date' => date("Y-m-d H:i:s"),
+                'id_user' => 1,
+                'id_phaply' => 1,
+                'id_huong' => 1,
+                'diachi' => $diachi,
+                'chieudai' => 0,
+                'chieurong' => 0,
+                'gia' => $gia,
+                'dientich' => $dientich
+            );
+            $this->load->model("tin_model");
+            $id_tin = $this->tin_model->insert($data_up);
         }
     }
 

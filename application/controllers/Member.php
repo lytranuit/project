@@ -71,11 +71,11 @@ class Member extends MY_Controller {
             "remove_tin",
         );
         if (in_array($method, $fun_tin)) {
-            $id = $param[0];
+            $id = $params[0];
             $id_user = $this->session->userdata('user_id');
             $this->load->model("tin_model");
             $tin = $this->tin_model->where(array('deleted' => 0, 'id_user' => $id_user, 'id_tin' => $id))->as_array()->get_all();
-            if (count($tin)) {
+            if (!count($tin)) {
                 return false;
             }
         }
@@ -697,19 +697,6 @@ class Member extends MY_Controller {
         $this->tintuc_model->update(array("deleted" => 1), $id);
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit;
-    }
-
-    function get_quan_huyen() {
-        if (isset($_GET['parent']))
-            $parent = $_GET['parent'];
-        else
-            $parent = 0;
-        $this->load->model("khuvuc_model");
-        $quan = $this->khuvuc_model->where(array('parent' => $parent, 'deleted' => 0))->order_by("order")->as_array()->get_all();
-        echo '<option value="0">--- Chọn Quận/Huyện ---</option>';
-        foreach ($quan as $cate) {
-            echo '<option value="' . $cate['id_khuvuc'] . '">' . $cate['ten_khuvuc'] . '</option>';
-        }
     }
 
     /*

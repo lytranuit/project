@@ -85,5 +85,18 @@ class Ajax extends MY_Controller {
         echo $this->blade->view()->make('ajax/ajaxpage', $this->data)->render();
     }
 
+    function get_quan_huyen() {
+        if (isset($_GET['parent']))
+            $parent = $_GET['parent'];
+        else
+            $parent = 0;
+        $this->load->model("khuvuc_model");
+        $quan = $this->khuvuc_model->where(array('parent' => $parent, 'deleted' => 0))->order_by("order")->as_array()->get_all();
+        echo '<option value="' . $parent . '">--- Chọn Quận/Huyện ---</option>';
+        foreach ($quan as $cate) {
+            echo '<option value="' . $cate['id_khuvuc'] . '">' . $cate['ten_khuvuc'] . '</option>';
+        }
+    }
+
 ////////////
 }

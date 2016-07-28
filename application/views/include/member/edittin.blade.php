@@ -205,7 +205,7 @@
         $.ajax({
             type: 'GET',
             data: {parent: parent},
-            url: '{{base_url()}}member/get_quan_huyen',
+            url: '{{base_url()}}ajax/get_quan_huyen',
             success: function (data) {
                 $(".post_quan").html(data);
             },
