@@ -12,7 +12,7 @@
                     @if($key)
                     <a href="{{base_url() . $hinh['bg_src']}}" class="swipebox-{{$tin['id_tin']}}" style="display: none;"><img class="" style="width: 100%; height: 200px;" src="{{base_url() . $hinh['bg_src']}}" alt=""></a>
                     @else
-                    <a href="{{base_url() . $hinh['bg_src']}}" class="swipebox-{{$tin['id_tin']}}"><img class="" style="width: 100%; height: 200px;"src="{{base_url() . $hinh['bg_src']}}"></a>
+                    <a href="{{base_url() . $hinh['bg_src']}}" class="swipebox-{{$tin['id_tin']}}"><img class="" style="width: 100%; height: 200px;"src="{{base_url() . $hinh['thumb_src']}}"></a>
                     @endif
                     @endforeach
                     <div class="jumbotron-overlay-down background-opacity"><span class="glyphicon glyphicon-zoom-in" style="font-size:1.5em;color:white;cursor: pointer;position: absolute;top: 45%;left: 45%;margin: 0;padding: 0;overflow: inherit;"></span></div>

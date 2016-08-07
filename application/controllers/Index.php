@@ -208,7 +208,7 @@ class Index extends MY_Controller {
                     $tin['gia'] = $tin['gia'] . " triệu";
                 } else {
                     if ($tin['gia'] % 1000) {
-                        $tin['gia'] = number_format($tin['gia'] / 1000, 2, ',') . " tỉ";
+                        $tin['gia'] = number_format($tin['gia'] / 1000, 2, ',', ".") . " tỉ";
                     } else {
                         $tin['gia'] = number_format($tin['gia'] / 1000) . " tỉ";
                     }
