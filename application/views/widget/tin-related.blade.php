@@ -1,6 +1,5 @@
 <div class="row equal">
     @foreach($arr_tin as $row)
-
     <div class="col-md-6">
         <div class="tin-show tin-show-grid wow fadeInDown" data-id="{{$row['id_tin']}}" data-wow-duration="1000ms" data-wow-delay="300ms">
             <div class="media">
@@ -30,5 +29,45 @@
 
     </div>
     @endforeach
-
 </div><!--/.row-->
+<nav id="pagination" class="col-xs-12 text-center">
+
+</nav>
+<script src="{{base_url()}}public/js/jquery.bootpag.min.js"></script>
+<script>
+$(document).ready(function () {
+    var total = "{{$count_page}}";
+    $('#pagination').bootpag({
+        total: total,
+        page: 1,
+        maxVisible: 5,
+        leaps: true,
+        firstLastUse: true,
+        first: '←',
+        last: '→',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function (event, num) {
+
+        $.ajax({
+            type: 'GET',
+            data: {page: num},
+            url: '{{base_url()}}ajax/get_tin',
+            beforeSend: function (xhr) {
+                $(".equal").fadeOut(1000);
+            },
+            success: function (data) {
+                $(".equal").html(data).fadeIn(1000);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    });
+})
+
+</script>

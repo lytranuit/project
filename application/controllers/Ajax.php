@@ -98,5 +98,45 @@ class Ajax extends MY_Controller {
         }
     }
 
+    function get_tin() {
+        $page = $this->input->get('page');
+        $this->load->model("tin_model");
+        $this->load->model("user_model");
+        $this->load->model("khuvuc_model");
+        $this->load->model("hinhanh_model");
+        $per_page = 10;
+        $total_posts = $this->tin_model->where(array('deleted' => 0, 'active' => 1))->count_rows();
+        $this->data['count_page'] = round($total_posts / $per_page);
+        $this->data['arr_tin'] = $this->tin_model->where(array('deleted' => 0, 'active' => 1))->order_by("id_tin", "DESC")->as_array()->paginate($per_page, $total_posts, $page);
+        foreach ($this->data['arr_tin'] as &$row) {
+            $arr_hinhanh = $this->tin_model->get_tin_hinhanh($row['id_tin']);
+            if (count($arr_hinhanh)) {
+                $hinhanh = $arr_hinhanh;
+            } else {
+                $hinhanh = $this->hinhanh_model->where(array("default" => 1, 'deleted' => 0))->as_array()->get_all();
+            }
+            $author = $this->user_model->where(array('id' => $row['id_user']))->as_array()->get_all();
+            $khuvuc = $this->khuvuc_model->where(array('id_khuvuc' => $row['id_khuvuc']))->as_array()->get_all();
+            $row['hinhanh'] = $hinhanh[0]['thumb_src'];
+            $row['arr_hinhanh'] = $hinhanh;
+            $row['author'] = $author[0]['username'];
+            $row['khuvuc'] = $khuvuc[0]['ten_khuvuc'];
+            if ($row['gia'] != 0) {
+                if ($row['gia'] < 1000) {
+                    $row['gia'] = $row['gia'] . " triệu";
+                } else {
+                    if ($row['gia'] % 1000) {
+                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',', ".") . " tỷ";
+                    } else {
+                        $row['gia'] = number_format($row['gia'] / 1000) . " tỷ";
+                    }
+                }
+            } else {
+                $row['gia'] = "Thương lượng";
+            }
+        }
+        echo $this->blade->view()->make('ajax/ajaxtin', $this->data)->render();
+    }
+
 ////////////
 }

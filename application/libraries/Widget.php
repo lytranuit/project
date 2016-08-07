@@ -14,12 +14,6 @@ class Widget {
         $views = APPPATH . "views/";
         $cache = APPPATH . "cache/";
         $this->blade = new Blade($views, $cache);
-        ////////////
-        ////////////////////////////////// Stle mac dinh
-        $this->data['stylesheet_tag'] = array(
-        );
-        $this->data['javascript_tag'] = array(
-        );
     }
 
     function tinnew() {
@@ -27,7 +21,10 @@ class Widget {
         $this->CI->load->model("user_model");
         $this->CI->load->model("khuvuc_model");
         $this->CI->load->model("hinhanh_model");
-        $this->data['arr_tin'] = $this->CI->tin_model->where(array('deleted' => 0, 'active' => 1))->as_array()->get_all();
+        $per_page = 10;
+        $total_posts = $this->CI->tin_model->where(array('deleted' => 0, 'active' => 1))->count_rows();
+        $this->data['count_page'] = round($total_posts / $per_page);
+        $this->data['arr_tin'] = $this->CI->tin_model->where(array('deleted' => 0, 'active' => 1))->order_by("id_tin", "DESC")->as_array()->paginate($per_page, $total_posts);
         foreach ($this->data['arr_tin'] as &$row) {
             $arr_hinhanh = $this->CI->tin_model->get_tin_hinhanh($row['id_tin']);
             if (count($arr_hinhanh)) {
@@ -46,9 +43,9 @@ class Widget {
                     $row['gia'] = $row['gia'] . " triệu";
                 } else {
                     if ($row['gia'] % 1000) {
-                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',') . " tỉ";
+                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',', ".") . " tỷ";
                     } else {
-                        $row['gia'] = number_format($row['gia'] / 1000) . " tỉ";
+                        $row['gia'] = number_format($row['gia'] / 1000) . " tỷ";
                     }
                 }
             } else {
@@ -63,7 +60,8 @@ class Widget {
         $this->CI->load->model("user_model");
         $this->CI->load->model("khuvuc_model");
         $this->CI->load->model("hinhanh_model");
-        $this->data['arr_tin'] = $this->CI->tin_model->where(array('deleted' => 0, 'active' => 1))->limit(4)->as_array()->get_all();
+        $this->data['count_page'] = 0;
+        $this->data['arr_tin'] = $this->CI->tin_model->where(array('deleted' => 0, 'active' => 1))->order_by("id_tin", "DESC")->limit(4)->as_array()->get_all();
         foreach ($this->data['arr_tin'] as &$row) {
             $arr_hinhanh = $this->CI->tin_model->get_tin_hinhanh($row['id_tin']);
             if (count($arr_hinhanh)) {
@@ -82,9 +80,9 @@ class Widget {
                     $row['gia'] = $row['gia'] . " triệu";
                 } else {
                     if ($row['gia'] % 1000) {
-                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',') . " tỉ";
+                        $row['gia'] = number_format($row['gia'] / 1000, 2, ',', ".") . " tỷ";
                     } else {
-                        $row['gia'] = number_format($row['gia'] / 1000) . " tỉ";
+                        $row['gia'] = number_format($row['gia'] / 1000) . " tỷ";
                     }
                 }
             } else {

@@ -53,55 +53,6 @@ class Index extends MY_Controller {
         echo $this->blade->view()->make('page/404-page', $this->data)->render();
     }
 
-    public function quanlypage() {
-        //phpinfo();die();
-        $this->data['template'] = "box";
-        $arr_page = $this->page_model->where(array("deleted" => 0))->as_array()->get_all();
-        $page_ava = array_map(function($item) {
-            return $item['link'];
-        }, $arr_page);
-
-        $this->data['arr_page'] = $arr_page;
-        //$dirmodule = APPPATH . 'modules/';
-        $dir = APPPATH . 'controllers/';
-        $this->load->library('directoryinfo');
-        $arr = $this->directoryinfo->readDirectory($dir, array("Auth.php", "Ajax.php"));
-        $arr = array($arr);
-        // $sortedarray2 = $this->directoryinfo->readDirectory($dirmodule, true);
-        // $arr = array_merge(array($sortedarray1), $sortedarray2);
-//        echo "<pre>";
-//        print_r($arr);
-//        die();
-        $dataselect = array();
-        foreach ($arr as $key => $row) {
-            $module = mb_strtolower($key, 'UTF-8');
-            foreach ($row as $key1 => $row1) {
-                $class = mb_strtolower($key1, 'UTF-8');
-                foreach ($row1 as $row2) {
-                    $method = mb_strtolower($row2, 'UTF-8');
-                    if ($module) {
-                        $page = $module . "/" . $class . "/" . $method;
-                    } else {
-                        $page = $class . "/" . $method;
-                    }
-                    $dataselect[$page] = $page;
-                }
-            }
-        }
-        $this->data['page_ava'] = $page_ava;
-        $this->data['link'] = $dataselect;
-        array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
-//        array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
-//        array_push($this->data['stylesheet_tag'], base_url() . "public/css/typeahead.js-bootstrap.css");
-//        array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
-        array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
-//        array_push($this->data['javascript_tag'], base_url() . "public/js/typeahead.js");
-//        array_push($this->data['javascript_tag'], base_url() . "public/js/typeaheadjs.js");
-//        array_push($this->data['javascript_tag'], base_url() . "public/js/combobox.js");
-        echo $this->blade->view()->make('page/page', $this->data)->render();
-    }
-
     public function delete_img() {
         $this->load->model("hinhanh_model");
         $hinh = $this->hinhanh_model->hinhanh_sudung();
@@ -221,9 +172,9 @@ class Index extends MY_Controller {
                 $tin[0]['gia'] = $tin[0]['gia'] . " triệu";
             } else {
                 if ($tin[0]['gia'] % 1000) {
-                    $tin[0]['gia'] = number_format($tin[0]['gia'] / 1000, 2, ',') . " tỉ";
+                    $tin[0]['gia'] = number_format($tin[0]['gia'] / 1000, 2, ',', ".") . " tỷ";
                 } else {
-                    $tin[0]['gia'] = number_format($tin[0]['gia'] / 1000) . " tỉ";
+                    $tin[0]['gia'] = number_format($tin[0]['gia'] / 1000) . " tỷ";
                 }
             }
         } else {
@@ -358,25 +309,134 @@ class Index extends MY_Controller {
         }
     }
 
+    public function quanlypage() {
+        //phpinfo();die();
+        $this->data['template'] = "box";
+        $arr_page = $this->page_model->where(array("deleted" => 0))->as_array()->get_all();
+        $page_ava = array_map(function($item) {
+            return $item['link'];
+        }, $arr_page);
+
+        $this->data['arr_page'] = $arr_page;
+        //$dirmodule = APPPATH . 'modules/';
+        $dir = APPPATH . 'controllers/';
+        $this->load->library('directoryinfo');
+        $arr = $this->directoryinfo->readDirectory($dir, array("Auth.php", "Ajax.php"));
+        $arr = array($arr);
+        // $sortedarray2 = $this->directoryinfo->readDirectory($dirmodule, true);
+        // $arr = array_merge(array($sortedarray1), $sortedarray2);
+//        echo "<pre>";
+//        print_r($arr);
+//        die();
+        $dataselect = array();
+        foreach ($arr as $key => $row) {
+            $module = mb_strtolower($key, 'UTF-8');
+            foreach ($row as $key1 => $row1) {
+                $class = mb_strtolower($key1, 'UTF-8');
+                foreach ($row1 as $row2) {
+                    $method = mb_strtolower($row2, 'UTF-8');
+                    if ($module) {
+                        $page = $module . "/" . $class . "/" . $method;
+                    } else {
+                        $page = $class . "/" . $method;
+                    }
+                    $dataselect[$page] = $page;
+                }
+            }
+        }
+        $this->data['page_ava'] = $page_ava;
+        $this->data['link'] = $dataselect;
+        array_push($this->data['stylesheet_tag'], base_url() . "public/css/dataTables.bootstrap.min.css");
+//        array_push($this->data['stylesheet_tag'], base_url() . "public/css/bootstrap-editable.css");
+//        array_push($this->data['stylesheet_tag'], base_url() . "public/css/typeahead.js-bootstrap.css");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/bootstrap-editable.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/jquery.dataTables.min.js");
+        array_push($this->data['javascript_tag'], base_url() . "public/js/dataTables.bootstrap.min.js");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/typeahead.js");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/typeaheadjs.js");
+//        array_push($this->data['javascript_tag'], base_url() . "public/js/combobox.js");
+        echo $this->blade->view()->make('page/page', $this->data)->render();
+    }
+
     public function crondata() {
+        $this->load->model("cron_model");
+        $this->load->model("tin_model");
+        $this->load->model('hinhanh_model');
+        $this->load->model("hinhanh_tin_model");
         include_once("public/dom/simple_html_dom.php");
+//        $html = file_get_contents("http://alonhadat.com.vn/dat-nen-phia-tay-tp-so-hong-rieng-bao-so-chi-3-7-tr-nen-giam-gia-den-7-5--1226562.html");
+//        echo $html;
+
         $page = "http://alonhadat.com.vn/";
         $html = file_get_html($page . 'nha-dat/can-ban/dat-tho-cu-dat-o/2/ho-chi-minh.html');
-        $first = $html->find(".content-item .ct_title a");
+        //$img = $html->find(".content-item .thumbnail a img");
+        $first = $html->find(".content-item");
         foreach ($first as $link) {
-            $href = $link->href;
+            $href = $link->find(".ct_title a", 0)->href;
             $id = preg_replace('/(.*)-(.*).html*/', "$2", $href);
+
+
+            /*
+             *  check Is Cron
+             */
+            $checkcron = $this->cron_model->where(array('id_cron' => $id, "hosting" => $page))->get_all();
+            if (count($checkcron)) {
+                continue;
+            }
+            /// END 
+            /*
+             *  get info what you need
+             */
+            $img = $link->find(".thumbnail a img", 0)->src;
+            $date = date("Y-m-d");
+            $dir = FCPATH . "public/uploads/$date/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $img_output = "public/uploads/$date/$id.jpg";
+            if (strpos($img, "http://") !== FALSE || strpos($img, "https://") !== FALSE) {
+                
+            } else {
+                $img = $page . $img;
+            }
+            file_put_contents($img_output, file_get_contents($img));
             $htmldata = file_get_html($page . $href);
             $title = $htmldata->find(".content .title h1", 0)->plaintext;
             $content = $htmldata->find(".content .detail", 0)->innertext;
-            $dientich = $htmldata->find(".content .square .value", 0)->plaintext;
-            $gia = $htmldata->find(".content .price .value", 0)->plaintext;
+            $get_dientich = $htmldata->find(".content .square .value", 0)->plaintext;
+            $get_gia = $htmldata->find(".content .price .value", 0)->plaintext;
+            $arr_dientich = explode(" ", $get_dientich);
+            $dientich = strtofloat($arr_dientich[1]);
+            $arr_gia = explode(" ", $get_gia);
+            if ($arr_gia[count($arr_gia) - 2] != '') {////trên m2
+                switch (trim($arr_gia[2])) {
+                    case "tỷ":
+                        $temp = strtofloat($arr_gia[1]);
+                        $gia = $temp * $dientich * 1000;
+                        break;
+                    default;
+                        $temp = strtofloat($arr_gia[1]);
+                        $gia = $temp * $dientich;
+                        break;
+                }
+            } else { //// bình thường
+                switch ($arr_gia[2]) {
+                    case "tỷ":
+                        $temp = strtofloat($arr_gia[1]);
+                        $gia = $temp * 1000;
+                        break;
+                    default;
+                        $temp = strtofloat($arr_gia[1]);
+                        $gia = $temp;
+                        break;
+                }
+            }
             $diachi = $htmldata->find(".content .contact .add .value", 0)->plaintext;
             $data_up = array(
                 'title' => $title,
                 'alias' => sluggable($title),
                 'content' => $content,
-                'id_khuvuc' => 2,
+                'id_khuvuc' => 1,
                 'date' => date("Y-m-d H:i:s"),
                 'id_user' => 1,
                 'id_phaply' => 1,
@@ -387,8 +447,38 @@ class Index extends MY_Controller {
                 'gia' => $gia,
                 'dientich' => $dientich
             );
-            $this->load->model("tin_model");
+//            echo "<br>Giá:" . $gia . "<br>Diện tích:" . $dientich;
+//            echo "<br>";
+//            print_r($get_dientich);
+//            echo "<br>";
+//            print_r($get_gia);
             $id_tin = $this->tin_model->insert($data_up);
+
+            ////// UPlad hinh anh
+            $data_up = array(
+                'ten_hinhanh' => $id,
+                'real_hinhanh' => $id,
+                'src' => $img_output,
+                'thumb_src' => $img_output,
+                'bg_src' => "public/uploads/2016-07-03/768x576_1467537290_0_logo.jpg",
+                'slider_src' => "public/uploads/2016-07-03/768x576_1467537290_0_logo.jpg",
+                'id_user' => 1,
+                'deleted' => 0,
+                'date' => date("Y-m-d H:i:s")
+            );
+            $id_image = $this->hinhanh_model->insert($data_up);
+            $this->hinhanh_tin_model->insert(array('id_tin' => $id_tin, 'id_hinhanh' => $id_image));
+
+            /*
+             *  Save id cron
+             */
+            $data = array(
+                'id_tin' => $id_tin,
+                'hosting' => $page,
+                'id_cron' => $id,
+                'date' => date("Y-m-d H:i:s")
+            );
+            $this->cron_model->insert($data);
         }
     }
 

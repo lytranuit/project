@@ -2794,6 +2794,9 @@ div.form-error ul li {
 #tin-details{
     line-height: 25px;
 }
+#tin-details .fr-view{
+    white-space: pre-line;
+}
 /* SLIDER */
 /* Detail Page
 --------------------------------------------------------*/
